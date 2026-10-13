@@ -4,7 +4,7 @@ Como projetar um assistente que responde dúvidas sobre uma clínica, encontra p
 
 Este repositório explora essa pergunta por meio de um **SaaS multi-tenant para clínicas**, com atendimento por Web e WhatsApp. O estudo conecta agentes, RAG, tools e backend transacional às decisões de qualidade, custo, latência e segurança que sustentam o sistema — do MVP à escala.
 
-O material nasceu de um desenho de entrevista de System Design e foi desenvolvido em **nove pranchas editáveis no draw.io**, acompanhadas de explicações, exemplos e cenários de falha. A arquitetura V2 mantém os fluxos da V1 e explicita os controles necessários para produção: Redis, AI Gateway, tools restritas, ingestão segura e operações transacionais recuperáveis. O conteúdo publicado é um estudo de arquitetura; os serviços descritos representam uma proposta, sem implementação executável ou resultados de produção neste repositório.
+O material nasceu de um desenho de System Design e foi desenvolvido em **nove pranchas editáveis no draw.io**, acompanhadas de explicações, exemplos e cenários de falha. A arquitetura V2 mantém os fluxos da V1 e explicita os controles necessários para produção: Redis, AI Gateway, tools restritas, ingestão segura e operações transacionais recuperáveis. O conteúdo publicado é um estudo de arquitetura; os serviços descritos representam uma proposta, sem implementação executável ou resultados de produção neste repositório.
 
 **Comece pelo [fluxo de atendimento](#atendimento), acompanhe a [busca de conhecimento](#rag) e termine na [reserva de uma consulta](#agendamento).** Para editar as nove pranchas, use o [arquivo fonte do draw.io][drawio].
 
