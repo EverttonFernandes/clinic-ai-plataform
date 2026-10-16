@@ -1,0 +1,11 @@
+{
+  "executor": {"model": "gpt-6-astra", "reasoning_effort": "medium"},
+  "reviewer": {"model": "gpt-6-sol", "reasoning_effort": "medium"},
+  "branch_prefix": "story/",
+  "base_branch": "main",
+  "manual_reviewer": "EverttonFernandes",
+  "required_workflows": {
+    "Harness contracts": ".github/workflows/harness.yml",
+    "Application CI": ".github/workflows/application.yml"
+  }
+}
