@@ -1,6 +1,10 @@
 # Clínica IA — implementação do System Design
 
 - Fonte normativa: [spec.md](spec.md). Diagramas e material de estudo: [README.md](README.md).
+- Preservar o README da raiz como guia completo de estudo do System Design: explicações,
+  fluxos, imagens e trade-offs. A evolução da plataforma deve complementar esse material.
+  Criar futuramente outro README para proposta de negócio, uso e explicação técnica da
+  plataforma; não substituir, resumir ou mover o guia de estudo para dar lugar a ele.
 - Comece por [.agents/rules/README.md](.agents/rules/README.md); carregue apenas regras aplicáveis.
 - Se houver pedido de implementação, siga [KANBAN-OFICIAL.md](docs/jira-pessoal/KANBAN-OFICIAL.md).
   Negócio e técnica compartilham a mesma fila; não gerar prioridades paralelas.

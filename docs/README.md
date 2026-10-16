@@ -2,6 +2,11 @@
 
 Esta pasta versiona apenas o novo planejamento. Os prompts antigos continuam locais e ignorados.
 
+O [README da raiz](../README.md) permanece o guia completo de estudo do System Design.
+O futuro README da plataforma explicará a proposta de negócio, as jornadas de uso e os
+aspectos técnicos correspondentes, complementando esse guia. Sua criação ocorrerá em uma
+etapa posterior; este índice continua dedicado ao planejamento.
+
 1. [Especificação normativa](../spec.md): escopo, requisitos e invariantes.
 2. [Kanban oficial](jira-pessoal/KANBAN-OFICIAL.md): fila única de execução cronológica.
 3. [Decisões e pendências](spec-driven-development/decisoes.md): stack, simplificações e limites.

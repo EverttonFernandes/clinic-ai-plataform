@@ -7,6 +7,10 @@ Data: 2026-10-16. Estado: baseline de implementação, com decisões externas ai
 - Python + FastAPI + pytest; aplicação e testes em Docker.
 - Versionar apenas o novo planejamento de docs, preservando prompts antigos ignorados.
 - Preparar especificação e Kanban antes de escrever a aplicação.
+- Manter o README da raiz como guia completo do System Design e ponto de partida dos estudos,
+  preservando explicações, fluxos, imagens e trade-offs. Futuramente haverá outro README
+  da plataforma, combinando proposta de negócio, jornadas de uso e visão técnica; ele
+  complementará o material de estudo, sem substituí-lo, resumi-lo ou deslocá-lo.
 - DDD com portas e adaptadores, tomando o WorkLink como referência e adaptando os módulos para Python.
 - Avaliar LiteLLM e Databricks em evoluções opcionais, com evidências práticas e custo autorizado.
 
