@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "CT-027",
+  "title": "Avalia\u00e7\u00e3o do LiteLLM como gateway de modelos",
+  "type": "Opcional",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-027-avaliacao-litellm.md",
+  "plan_path": "docs/tasks/CT-027/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Backlog opcional",
+    "order": 38,
+    "relationship_text": "CT-026",
+    "observed_at": "2026-10-16T19:09:01.410962+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "CT-026",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T19:09:01.414162+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T19:09:01.414162+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

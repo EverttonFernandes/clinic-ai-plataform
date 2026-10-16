@@ -29,6 +29,13 @@ no teste. Corrigir o setup antes de usar a falha como evidência de comportament
 | Falhas/recuperação | Interrupção entre commit/publicação, Redis perdido, DLQ e backup/restore. | Somente projetos/volumes descartáveis identificados como teste. |
 | Carga | p95, throughput, filas, uso, limites e recuperação após sobrecarga. | Descrever hardware, dataset, janela e taxa; laboratório não é SLA de produção. |
 | Evals | Qualidade, seleção/argumentos de tools, groundedness, hallucination, retrieval relevance e trajetória. | Dataset e versões; distinguir provider controlado, real, judge e humano. |
+| Arquitetura | Domínio/aplicação sem dependências externas ou adapters; acesso entre contextos apenas por contratos públicos. | Verificação de imports começa em CT-002 e cresce com módulos reais; não exige ArchUnit ou stack Java. |
+
+O [mapa DDD](arquitetura-ddd.md) orienta os testes por contexto. Unitários exercitam
+transições e invariantes; integração prova os adapters e transações reais; funcionais
+percorrem os contratos públicos. Um teste de importação não comprova autorização ou reserva correta.
+CT-027/CT-028 acrescentam contratos específicos: tentativas/custo com proxy, replay/checkpoint,
+isolamento e reconciliação analítica; evidência local não equivale a job executado no Databricks.
 
 Usar nomes didáticos e estrutura Given/When/Then ou Arrange/Act/Assert, com expectativas
 de resultado e efeitos. Evitar testes que apenas refletem a organização do código.

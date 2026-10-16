@@ -60,6 +60,13 @@ Atualizado em 2026-10-16. **Planejamento e harness preparados; nenhuma história
 | Ordem | História | Condição de entrada | Dependência | Estado |
 | --- | --- | --- | --- | --- |
 | 37 | [C-011 — Aprovação humana para ação de alto risco definida](historias/C-011-aprovacao-alto-risco.md) | D-06 e autorização do escopo de alto risco. | CT-026 | Backlog |
+| 38 | [CT-027 — Avaliação do LiteLLM como gateway de modelos](historias-tecnicas/CT-027-avaliacao-litellm.md) | D-07, escolha explícita da evolução e escopo de custo definido. | CT-026 | Backlog |
+| 39 | [CT-028 — Avaliação de consolidação analítica no Databricks](historias-tecnicas/CT-028-avaliacao-databricks.md) | D-08, escolha explícita da evolução, workspace e custo autorizado. | CT-026 | Backlog |
+
+DDD é uma decisão transversal aplicada desde CT-001/CT-002, conforme o
+[mapa de contextos](../spec-driven-development/arquitetura-ddd.md). LiteLLM e Databricks
+são candidatos futuros; entram na execução somente por promoção explícita deste backlog,
+sem alterar as dependências ou o aceite do MVP.
 
 ## Marcos de demonstração
 

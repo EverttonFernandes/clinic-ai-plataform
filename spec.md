@@ -13,6 +13,7 @@ Os prompts de elaboração continuam locais e não são necessários para execut
 - [Kanban oficial](docs/jira-pessoal/KANBAN-OFICIAL.md): ordem e estado de execução.
 - Histórias: recortes de entrega e critérios de aceite; não podem reduzir a especificação.
 - [Decisões](docs/spec-driven-development/decisoes.md): escolhas de implementação e pendências.
+- [Arquitetura DDD](docs/spec-driven-development/arquitetura-ddd.md): contextos, propriedade dos dados, dependências e evoluções opcionais.
 - [Harness](docs/spec-driven-development/harness.md): protocolo e verificadores locais de execução/conclusão.
 - Diagramas/README: explicação e referências visuais; atualizar se a implementação aprovada divergir.
 
@@ -37,7 +38,8 @@ HITL de alto risco é extensão opcional, sem ampliar automaticamente capacidade
 ## 3. Base técnica acordada
 
 - Python + FastAPI + pytest. Aplicação, ferramentas e testes executados em Docker Compose.
-- Monólito modular e worker inicialmente; sem deployment obrigatório por caixa.
+- Monólito modular com DDD e portas/adaptadores, mais worker; sem deployment obrigatório por caixa.
+- Módulos por contexto de negócio, com domínio puro, aplicação, entradas e infraestrutura criados por necessidade; composição no bootstrap.
 - PostgreSQL + pgvector; Redis; documentos privados persistentes; jobs duráveis e eventos.
 - Gateway de API como fronteira lógica; AI Gateway/Model Router como módulos internos.
 - Cliente Web mínimo servido pela aplicação; não exigir framework frontend ou Node.
@@ -47,6 +49,11 @@ HITL de alto risco é extensão opcional, sem ampliar automaticamente capacidade
 
 Versões suportadas e dependências travadas serão registradas em CT-001. Não usar tags
 flutuantes em releases. Não instalar a aplicação nem consumir APIs durante o planejamento.
+
+LiteLLM é candidato futuro para implementar a integração de modelos atrás de uma porta
+do AI Gateway. Databricks é candidato à consolidação analítica assíncrona de dados
+selecionados. CT-027/CT-028 são opcionais, após CT-026 e decisões D-07/D-08; não ampliam
+o aceite do MVP nem substituem PostgreSQL/pgvector/Redis. Detalhes no mapa DDD.
 
 ## 4. Fronteiras obrigatórias
 
@@ -59,6 +66,8 @@ flutuantes em releases. Não instalar a aplicação nem consumir APIs durante o 
 
 Módulos podem chamar-se no mesmo processo, mas sem contornar autenticação, autorização,
 schema, quota e auditoria. HTTP/BFF adapta entrada; serviços contêm regras de negócio.
+Domínio/aplicação não dependem de adapters. Outros módulos usam contratos públicos,
+identificadores e DTOs mínimos; o compartilhamento do banco não libera SQL cruzado.
 
 ## 5. Requisitos funcionais
 
@@ -97,6 +106,7 @@ schema, quota e auditoria. HTTP/BFF adapta entrada; serviços contêm regras de 
 | RNF-11 | Ambiente isolado e reproduzível: Docker, migrations, fixtures sintéticas, namespaces/bancos de teste independentes, cleanup restrito ao ambiente de teste e sem apagar volumes de desenvolvimento. |
 | RNF-12 | BDD antes da implementação; TDD Red → Green → revisão de coesão/refatoração pertinente → regressão. Testes por impacto e evidências executadas; sem percentual arbitrário de cobertura. |
 | RNF-13 | CI em PR com testes e análise; release imutável; CD controlado com secrets por ambiente, smoke e rollback. Não publicar nem assumir infraestrutura configurada por existir um documento. |
+| RNF-14 | DDD modular conforme mapa de contextos; domínio puro, aplicação orientada por portas e composição externa. Tabelas/migrations com dono, contratos públicos entre módulos e verificação de dependências conforme módulos surgirem. Preservar transações críticas e simplicidade. |
 
 ## 7. Dados e contratos mínimos
 

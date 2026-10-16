@@ -9,7 +9,7 @@ Exercitar model routing e resiliência sem consumir APIs reais.
 
 ## Vínculos e dependências
 
-- Requisitos: `RF-13`, `RNF-04`, `RNF-06` — [especificação](../../../spec.md).
+- Requisitos: `RF-13`, `RNF-04`, `RNF-06`, `RNF-14` — [especificação](../../../spec.md).
 - Dependências: [CT-008](../historias-tecnicas/CT-008-budget-runtime.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,7 @@ Exercitar model routing e resiliência sem consumir APIs reais.
 - [ ] Centralizar credentials/config, timeout, backoff/jitter, circuit breaker, retry e accounting.
 - [ ] Provider controlado devolve respostas/tool calls, uso, erros e demora por roteiro versionado.
 - [ ] Fallback controlado consome o mesmo deadline/budget; execução real só em CT-018 após evals.
+- [ ] Portas próprias de geração/embedding isolam agentes/aplicação dos SDKs; registrar dono de retry/fallback e permitir adapter futuro LiteLLM sem mudar domínio nem autorização. Implementar o proxy pertence à CT-027 opcional.
 
 ## Cenários BDD de aceitação
 

@@ -9,7 +9,7 @@ Criar o estado durável necessário às APIs, idempotência, eventos e jobs.
 
 ## Vínculos e dependências
 
-- Requisitos: `RNF-01`, `RNF-02`, `RF-14` — [especificação](../../../spec.md).
+- Requisitos: `RNF-01`, `RNF-02`, `RF-14`, `RNF-14` — [especificação](../../../spec.md).
 - Dependências: [CT-003](../historias-tecnicas/CT-003-ci-inicial.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,7 @@ Criar o estado durável necessário às APIs, idempotência, eventos e jobs.
 - [ ] Planejar registros de appointment/idempotência/outbox/inbox/jobs/consumo sem tabelas para funcionalidades clínicas fora do MVP.
 - [ ] Migrations reproduzíveis em banco vazio e evolução compatível, com índices de filtros de escopo.
 - [ ] Fixtures sintéticas de dois tenants; nenhuma alteração silenciosa do schema ao iniciar requests.
+- [ ] Identificar dono de tabelas/migrations por contexto e contrato de unidade de trabalho; modelos ORM e adapters ficam na infraestrutura. Migrations de funcionalidades futuras são planejadas, não criadas antecipadamente.
 
 ## Cenários BDD de aceitação
 

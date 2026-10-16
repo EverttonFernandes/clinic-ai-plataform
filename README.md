@@ -11,6 +11,11 @@ O material nasceu de um desenho de System Design e foi desenvolvido em **nove pr
 [índice de planejamento](docs/README.md). Há histórias com critérios BDD, dependências,
 estratégia de testes e CI/CD planejados. A aplicação ainda não foi implementada.
 
+A [organização DDD](docs/spec-driven-development/arquitetura-ddd.md) define os módulos de
+identidade, pacientes, catálogo, agendamento, conhecimento, conversação e consumo em um
+monólito modular com portas e adaptadores. LiteLLM como integração do AI Gateway e
+Databricks para analytics ficam no backlog opcional, com critérios próprios de validação.
+
 O [harness de execução](docs/spec-driven-development/harness.md) já dispõe de Ralph Loop,
 tracking de dependências/ownership e verificação local de evidências antes de Done, com
 [evals e protocolo de LLM-as-a-Judge](docs/spec-driven-development/evals-harness.md).

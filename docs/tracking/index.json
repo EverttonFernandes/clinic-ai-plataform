@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T17:54:23.895223+00:00",
+  "generated_at": "2026-10-16T19:09:01.418906+00:00",
   "authoritative_for_priority": false,
   "features": [
     {
@@ -332,6 +332,24 @@
       "title": "Aprova\u00e7\u00e3o humana para a\u00e7\u00e3o de alto risco definida",
       "status": "TODO",
       "path": "C-011.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-027",
+      "title": "Avalia\u00e7\u00e3o do LiteLLM como gateway de modelos",
+      "status": "TODO",
+      "path": "CT-027.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-028",
+      "title": "Avalia\u00e7\u00e3o de consolida\u00e7\u00e3o anal\u00edtica no Databricks",
+      "status": "TODO",
+      "path": "CT-028.json",
       "started_at": null,
       "completed_at": null,
       "failure_count": 0

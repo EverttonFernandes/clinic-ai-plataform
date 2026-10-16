@@ -9,7 +9,7 @@ Executar testes reproduzíveis por HTTP e por camada sem contaminar o ambiente d
 
 ## Vínculos e dependências
 
-- Requisitos: `RNF-11`, `RNF-12` — [especificação](../../../spec.md).
+- Requisitos: `RNF-11`, `RNF-12`, `RNF-14` — [especificação](../../../spec.md).
 - Dependências: [CT-001](../historias-tecnicas/CT-001-ambiente-docker.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -20,6 +20,7 @@ Executar testes reproduzíveis por HTTP e por camada sem contaminar o ambiente d
 - [ ] Cliente funcional acessa API em processo/container separado; integração usa PostgreSQL/Redis reais.
 - [ ] Comandos retornam falha em erro ou zero testes esperados; cleanup atua só em recursos identificados como teste.
 - [ ] Incorporar as suítes implementadas ao Application CI existente, com falha real bloqueando sucesso e execução no HEAD da história.
+- [ ] Verificar imports das camadas/módulos existentes conforme o [mapa DDD](../../spec-driven-development/arquitetura-ddd.md); comprovar falha com violação controlada, sem exigir domínios fictícios no produto.
 
 ## Cenários BDD de aceitação
 
@@ -42,6 +43,11 @@ Funcionalidade: Harness de testes isolados e evidências
     Dado que uma expectativa funcional é deliberadamente violada
     Quando a suíte correspondente é executada
     Então o comando termina com código de erro e relatório que identifica a assertion
+
+  Cenário: Fronteira arquitetural violada
+    Dado que o verificador recebe uma fixture com domínio importando infraestrutura
+    Quando a regra de dependências é verificada
+    Então a violação é identificada e o comando falha
 ```
 
 ## Validação e conclusão

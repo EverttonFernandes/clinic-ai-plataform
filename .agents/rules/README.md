@@ -30,6 +30,7 @@ condição se aplicar. Não carregar todas as personas nem todo o histórico a c
 | Loop longo/retomada | [janela de contexto e handoff](context-management.md). |
 | Comportamento e testes | [BDD/TDD](tdd-bdd.md), [evidência](test-evidence-quality.md). |
 | Código e clareza | [nomes/fronteiras](clean-code-readable-names.md), [revisão de coesão](refactor-after-functional-green.md). |
+| Módulos, domínio e integrações | [arquitetura DDD](architecture-ddd.md). |
 | Segurança/custo | [fronteiras e consumo](security-and-cost.md). |
 | Revisão/conclusão | [escopo](review-scope.md), [gate de conclusão](evidence-backed-completion.md). |
 | Falha recorrente | [recuperação](iteration-recovery.md). |

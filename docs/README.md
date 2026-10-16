@@ -10,6 +10,7 @@ Esta pasta versiona apenas o novo planejamento. Os prompts antigos continuam loc
 6. [Ambientes e CI/CD](spec-driven-development/ambientes-e-cicd.md): contratos de automação a implementar.
 7. [Template de tarefa](tasks/TEMPLATE.md) e [template de entrega](entregas/TEMPLATE.md).
 8. [Harness de execução](spec-driven-development/harness.md), [evals e LLM-as-a-Judge](spec-driven-development/evals-harness.md) e [tracking](tracking/README.md).
+9. [Arquitetura DDD](spec-driven-development/arquitetura-ddd.md): contextos, portas/adapters, transações e evoluções LiteLLM/Databricks.
 
 Histórias de negócio ficam em `jira-pessoal/historias/`; técnicas em `historias-tecnicas/`.
 Todas são selecionadas pelo mesmo Kanban. Não há código de aplicação ou pipeline do produto nesta etapa;

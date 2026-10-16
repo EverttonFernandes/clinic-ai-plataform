@@ -34,6 +34,7 @@ não executadas. A implementação preenche planos/entregas com comandos, result
 | RNF-11 | [CT-001](../jira-pessoal/historias-tecnicas/CT-001-ambiente-docker.md), [CT-002](../jira-pessoal/historias-tecnicas/CT-002-harness-testes.md), [CT-024](../jira-pessoal/historias-tecnicas/CT-024-prontidao-ambiente-real.md) | Checkout limpo, dados de teste isolados e preservação de volumes de desenvolvimento. |
 | RNF-12 | [CT-001](../jira-pessoal/historias-tecnicas/CT-001-ambiente-docker.md), [CT-002](../jira-pessoal/historias-tecnicas/CT-002-harness-testes.md), [CT-003](../jira-pessoal/historias-tecnicas/CT-003-ci-inicial.md), [CT-015](../jira-pessoal/historias-tecnicas/CT-015-evals-offline.md), [CT-025](../jira-pessoal/historias-tecnicas/CT-025-release-cicd.md) | Red/Green, revisão de coesão e regressão por impacto com evidência. |
 | RNF-13 | [CT-001](../jira-pessoal/historias-tecnicas/CT-001-ambiente-docker.md), [CT-003](../jira-pessoal/historias-tecnicas/CT-003-ci-inicial.md), [CT-024](../jira-pessoal/historias-tecnicas/CT-024-prontidao-ambiente-real.md), [CT-025](../jira-pessoal/historias-tecnicas/CT-025-release-cicd.md) | CI com falha bloqueante, artifact imutável e CD/rollback reais quando autorizados. |
+| RNF-14 | [CT-001](../jira-pessoal/historias-tecnicas/CT-001-ambiente-docker.md), [CT-002](../jira-pessoal/historias-tecnicas/CT-002-harness-testes.md), [CT-004](../jira-pessoal/historias-tecnicas/CT-004-persistencia-migrations.md), [CT-009](../jira-pessoal/historias-tecnicas/CT-009-ai-gateway-controlado.md) e cada história de módulo. | Bootstrap e imports por fronteira, ownership/UoW, adapters isolados e consumidores públicos conforme o mapa DDD. |
 
 ## Fluxos da aba 09
 
@@ -47,3 +48,11 @@ não executadas. A implementação preenche planos/entregas com comandos, result
 | Bloqueio de abuso | CT-006/CT-008 e CT-020–CT-022. | Bloqueio antes de chamada cara sob concorrência e Redis fora. |
 
 CT-026 consolida as provas; não substitui testes e segurança em cada incremento.
+
+## Evoluções opcionais
+
+O [mapa DDD](arquitetura-ddd.md) detalha as fronteiras do RNF-14.
+[CT-027](../jira-pessoal/historias-tecnicas/CT-027-avaliacao-litellm.md) aplica
+RF-13/RNF-03/04/06/09/14 ao proxy candidato;
+[CT-028](../jira-pessoal/historias-tecnicas/CT-028-avaliacao-databricks.md) aplica
+RNF-01/07/08/14 às projeções analíticas. Elas não substituem as provas do aceite V2.

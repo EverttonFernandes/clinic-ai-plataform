@@ -13,6 +13,9 @@
   [.agents/skills/cohesive-code-development/SKILL.md](.agents/skills/cohesive-code-development/SKILL.md).
   Revisão de coesão obrigatória; refatoração somente com ganho concreto. Não se aplica a leitura/documentação sem código.
 - Python/FastAPI/pytest em Docker; PostgreSQL/pgvector e Redis conforme spec. Não instalar toolchains no host por conveniência.
+- Arquitetura: DDD em monólito modular com portas e adaptadores, por contexto de negócio.
+  Seguir [regra DDD](.agents/rules/architecture-ddd.md) e [mapa de módulos](docs/spec-driven-development/arquitetura-ddd.md).
+  Criar estrutura progressivamente; LiteLLM e Databricks são evoluções opcionais no Kanban.
 - Exceção de bootstrap: coordenação Git e contratos do harness em scripts usam Git/Python stdlib
   no host, sem dependências da aplicação; não comprovam Docker ou integração do produto.
 - Antes de início/retomada, aplicar tracking/dependências e ownership local; antes de Done,

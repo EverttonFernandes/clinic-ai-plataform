@@ -9,7 +9,7 @@ Subir API mínima e dependências em ambiente isolado antes de construir regras.
 
 ## Vínculos e dependências
 
-- Requisitos: `RNF-11`, `RNF-12`, `RNF-13` — [especificação](../../../spec.md).
+- Requisitos: `RNF-11`, `RNF-12`, `RNF-13`, `RNF-14` — [especificação](../../../spec.md).
 - Dependências: nenhuma; primeira história da implementação.
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -20,6 +20,7 @@ Subir API mínima e dependências em ambiente isolado antes de construir regras.
 - [ ] Parar ambiente preserva volumes; runtime sem root quando viável e sem ferramentas de build desnecessárias.
 - [ ] Documentar portas, projeto Compose, perfis e recuperação de falha de dependência.
 - [ ] Workflow Application CI em push da branch e PR executa build/smoke reais do ambiente; registrar sucesso do HEAD antes do PR e conferir os checks após abertura.
+- [ ] Bootstrap FastAPI segue o [mapa DDD](../../spec-driven-development/arquitetura-ddd.md), sem regra de negócio no transporte nem geração antecipada de módulos/camadas vazios.
 
 ## Cenários BDD de aceitação
 
