@@ -9,7 +9,7 @@ Revisar as fronteiras já implementadas e exercitar retenção/exclusão com dad
 
 ## Vínculos e dependências
 
-- Requisitos: `RNF-01`, `RNF-05`, `RNF-08` — [especificação](../../../spec.md).
+- Requisitos: `RNF-01`, `RNF-05`, `RNF-08`, `RF-07` — [especificação](../../../spec.md).
 - Dependências: [CT-017](../historias-tecnicas/CT-017-contratos-resiliencia.md), [C-010](../historias/C-010-whatsapp-inbox.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,7 @@ Revisar as fronteiras já implementadas e exercitar retenção/exclusão com dad
 - [ ] Definir retenção por classe/finalidade e autorização de acesso; exclusão alcança originais, índice/cache e política de backups.
 - [ ] Auditoria minimizada com acesso restrito; hashes não substituem criptografia; KMS/rotação reais ficam como gate de CT-024.
 - [ ] Testar negativa antes do acesso em todos os caminhos; segurança não começa nesta história, ela verifica os controles anteriores.
+- [ ] Incluir state e snapshots/checkpoints eventualmente aprovados na retenção/exclusão e política de cópias; verificar minimização, revogação antes do TTL e ausência de payloads/credenciais em logs/traces. TTL no Redis não comprova exclusão de backups.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,16 @@ Funcionalidade: Verificação adversarial e políticas de privacidade
     Dado que um paciente tenta ler eventos internos de outro recurso
     Quando o endpoint protegido é chamado
     Então o acesso é negado sem expor conversa, chaves ou eventos pessoais
+
+  Cenário: Exclusão de state e cópias
+    Dado que um state sintético contém dado elegível para exclusão pela política definida
+    Quando a rotina autorizada aplica a política e o ciclo de cópias é verificado
+    Então o conteúdo deixa de ser servido e cópias seguem a retenção aprovada sem apagar registros transacionais obrigatórios
+
+  Cenário: Logs de erro de state
+    Dado que um snapshot inválido contém texto pessoal e um valor de teste marcado como segredo
+    Quando o backend registra o erro de leitura
+    Então o log contém somente metadados mínimos e não expõe os valores do snapshot
 ```
 
 ## Validação e conclusão

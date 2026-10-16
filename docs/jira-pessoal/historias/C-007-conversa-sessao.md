@@ -9,7 +9,7 @@ Como paciente, continuar uma conversa e confirmar ações sem duplicá-las.
 
 ## Vínculos e dependências
 
-- Requisitos: `RF-07`, `RF-08`, `RNF-04`, `RNF-10` — [especificação](../../../spec.md).
+- Requisitos: `RF-07`, `RF-08`, `RNF-01`, `RNF-03`, `RNF-04`, `RNF-08`, `RNF-10` — [especificação](../../../spec.md).
 - Dependências: [CT-010](../historias-tecnicas/CT-010-tools-restritas.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,11 @@ Como paciente, continuar uma conversa e confirmar ações sem duplicá-las.
 - [ ] Controlar ordem/versão por sessão entre instâncias, sem locks mantidos indefinidamente.
 - [ ] Agent único usa provider controlado e dispatcher; os oito limites encerram execução.
 - [ ] Confirmação de escrita vincula parâmetros à intenção; resposta usa resultado persistido, sem inventar sucesso.
+- [ ] Detalhar D-09/D-10/D-11 no plano: TTLs/renovação/limites, garantia de continuidade e coordenação. Snapshot mínimo inclui contexto recente, intenção, parâmetros presentes/faltantes, etapa, referências e versão; não guarda credenciais, raciocínio interno ou histórico ilimitado.
+- [ ] Autorizar leitura/escrita/retomada por tenant/clínica/ator/sessão e paciente permitido; negar IDs cruzados, revogação e mistura de duas sessões do mesmo ator. Sessão de conversa não substitui autenticação.
+- [ ] Expiração/encerramento não é renovado por leitura passiva ou escrita atrasada; informar perda de contexto e recolher parâmetros necessários sem reaproveitar confirmação antiga. Alterar parâmetros invalida a confirmação anterior.
+- [ ] Restart de instância retoma somente snapshot válido e etapa reconciliada; perda do Redis/state não autoriza reconstruir conversa de cache/logs, repetir tool ou zerar tetos/consumo. Reconciliar efeito persistente com a mesma intenção/chave.
+- [ ] Rejeitar state inválido/incompatível/excessivo e saída tardia de execução obsoleta sem servir conteúdo sensível, sobrescrever versão nova ou recriar sessão expirada. Logs registram metadados mínimos.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +46,46 @@ Funcionalidade: Conversa com sessão e execução limitada
     Dado que o provider controlado solicita etapas sucessivas sem concluir
     Quando o limite determinístico é alcançado
     Então a tarefa encerra sem nova chamada cara ou sucesso inventado
+
+  Cenário: Expiração entre etapas
+    Dado que a sessão contém profissional e horário coletados ainda sem reserva
+    Quando sua validade termina antes da próxima confirmação
+    Então a aplicação informa perda de contexto e não reserva com os parâmetros antigos
+
+  Cenário: Isolamento de ator e sessão
+    Dado que existem sessões de outros tenants e atores e duas sessões do mesmo ator
+    Quando o cliente envia um identificador de sessão fora do vínculo autorizado
+    Então não lê nem altera o state e nenhuma sessão herda parâmetros de outra
+
+  Cenário: Permissão revogada antes do TTL
+    Dado que uma sessão válida referencia um paciente cujo acesso foi revogado
+    Quando o ator tenta continuar a conversa
+    Então o backend nega acesso aos dados e não executa a ação proposta
+
+  Cenário: Reinício da instância
+    Dado que o último snapshot consistente continua válido no Redis e não há efeito pendente
+    Quando a instância que atendia a sessão reinicia e outra recebe a mensagem
+    Então a conversa preserva escolhas e etapa sem reiniciar os limites da execução
+
+  Cenário: Commit sem atualização do state
+    Dado que uma tool comitou uma reserva mas a instância caiu antes de salvar a resposta no state
+    Quando a mesma intenção é retomada
+    Então o serviço reconcilia o resultado persistido com a mesma chave sem duplicar reserva nem evento
+
+  Cenário: Resposta de execução obsoleta
+    Dado que a sessão expirou ou avançou de versão enquanto uma chamada estava em andamento
+    Quando o resultado atrasado chega
+    Então ele não ressuscita a sessão nem sobrescreve o state atual ou autoriza nova ação
+
+  Cenário: Parâmetros mudam após confirmação
+    Dado que uma intenção teve seus parâmetros confirmados
+    Quando o usuário altera o profissional ou horário
+    Então a confirmação anterior não autoriza executar a intenção modificada
+
+  Cenário: State inválido ou excessivo
+    Dado que um snapshot tem formato incompatível ou conteúdo acima do limite registrado
+    Quando a aplicação tenta carregá-lo ou atualizá-lo
+    Então ela trata o erro de forma segura sem executar a etapa nem expor o payload nos logs
 ```
 
 ## Validação e conclusão

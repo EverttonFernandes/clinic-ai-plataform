@@ -9,7 +9,7 @@ Medir comportamento sob disputa e falhas antes de aumentar instâncias ou public
 
 ## Vínculos e dependências
 
-- Requisitos: `RNF-02`, `RNF-03`, `RNF-06`, `RNF-10` — [especificação](../../../spec.md).
+- Requisitos: `RNF-02`, `RNF-03`, `RNF-06`, `RNF-10`, `RF-07` — [especificação](../../../spec.md).
 - Dependências: [CT-020](../historias-tecnicas/CT-020-seguranca-privacidade.md), [CT-014](../historias-tecnicas/CT-014-cache-respostas.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,7 @@ Medir comportamento sob disputa e falhas antes de aumentar instâncias ou public
 - [ ] Repetir 100 concorrentes por slot e corridas de reagendamento/idempotência/budget.
 - [ ] Medir p95/throughput/erros/filas/uso em carga sintética declarada; registrar baseline sem inventar SLA.
 - [ ] Backup/restore PostgreSQL e documentos em ambiente descartável; recuperar registros/limites e medir RPO/RTO.
+- [ ] Distinguir restart da API, perda/eviction de state e indisponibilidade/perda do Redis: continuidade somente com snapshot válido; perda informa limite, mantém efeitos/consumo e não libera replay. Se houver restauração de state, validar expiração, revogação e resultado transacional.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,16 @@ Funcionalidade: Falhas, carga, concorrência e restauração
     Dado que a taxa de pedidos supera capacidade medida
     Quando a carga sintética é aplicada
     Então backpressure/limites preservam integridade e o relatório informa p95, erros e consumo
+
+  Cenário: Perda de state após reserva
+    Dado que uma reserva e seu resultado idempotente estão comitados mas a resposta não chegou ao paciente
+    Quando o state é perdido e o usuário repete a tentativa pela mesma intenção identificável
+    Então o resultado é reconciliado no PostgreSQL sem nova reserva e sem reconstruir confirmação a partir do cache
+
+  Cenário: Snapshot antigo reaparece
+    Dado que um snapshot anterior à expiração ou revogação é reapresentado à aplicação
+    Quando o backend verifica sua validade antes da retomada
+    Então ele não reativa a sessão nem concede autorização ou saldo anterior
 ```
 
 ## Validação e conclusão

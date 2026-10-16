@@ -19,6 +19,7 @@ Demonstrar que estado externo e limites continuam corretos entre instâncias.
 - [ ] Reusar Redis/PostgreSQL/storage compartilhados, pools limitados e budget global.
 - [ ] Provar ordem de sessão e posse de job; falha de uma instância não perde evento durável.
 - [ ] Comparar baseline e gargalos; não prometer autoscaling/Kubernetes nem disponibilidade de produção.
+- [ ] Validar a decisão D-11 com sessões concorrentes: conflito explícito, duplicatas e resultado atrasado após perda de posse/expiração não sobrescrevem state nem duplicam efeitos; mesma sessão continua em outra instância somente se ainda válida.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,11 @@ Funcionalidade: Duas instâncias e balanceamento no laboratório
     Dado que um worker perde lease e outro assume o job
     Quando o primeiro tenta publicar atrasado
     Então a atualização condicionada impede sobrescrever estado mais recente
+
+  Cenário: Execução de conversa perde posse
+    Dado que uma execução antiga perdeu sua autorização de atualização e outra instância avançou a sessão
+    Quando a execução antiga termina a chamada ao provider
+    Então não sobrescreve escolhas novas nem libera posse alheia ou inicia outra tool com a confirmação antiga
 ```
 
 ## Validação e conclusão

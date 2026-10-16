@@ -19,6 +19,8 @@ Impedir abuso de requests e preparar estado temporário compartilhado.
 - [ ] Atualizações atômicas entre instâncias; TTL da sessão não renova quota.
 - [ ] Identificar ator autenticado e origem/canal anônimo; negar tráfego protegido quando o controle falha.
 - [ ] Registrar requests e rejeições sem liberar chamadas caras; orçamento monetário vem em CT-008.
+- [ ] Documentar classes separadas de state, cache e consumo e política D-09 por finalidade; state terá escopo tenant/clínica/ator/sessão, sem impor uma instância Redis por classe.
+- [ ] Gravações/atualizações temporárias mantêm expiração consistentemente; validar que o caminho de substituição não produz chave sem TTL e que valores de cliente/LLM não ampliam retenção.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +43,16 @@ Funcionalidade: Redis e limites compartilhados de entrada
     Dado que o backend não consegue verificar os limites compartilhados
     Quando recebe um pedido protegido
     Então nega a operação sem usar limite local permissivo
+
+  Cenário: Atualização preserva política de expiração
+    Dado que um registro temporário possui prazo definido pela finalidade
+    Quando o adapter substitui seu conteúdo
+    Então a expiração segue a política definida e o registro não se torna permanente
+
+  Cenário: Finalidades independentes
+    Dado que state, cache e quota têm prazos distintos na política de teste
+    Quando um deles expira ou é atualizado
+    Então a validade dos outros não é alterada implicitamente
 ```
 
 ## Validação e conclusão

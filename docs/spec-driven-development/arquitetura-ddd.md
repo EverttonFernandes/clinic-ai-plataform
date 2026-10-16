@@ -43,6 +43,14 @@ API Gateway/BFF é uma fronteira de políticas de entrada, não outro domínio d
 Observabilidade, configuração e conexão de dependências são infraestrutura. Evals são um
 pipeline de qualidade separado do atendimento. Não criar um domínio artificial para cada ferramenta.
 
+State temporário de conversa/workflow pertence a `conversations`, separado de cache de
+respostas e de `consumption`. O adapter Redis implementa a persistência temporária atrás
+de portas; domínio/aplicação não conhecem chaves ou comandos Redis. Versão, expiração,
+isolamento por tenant/clínica/ator/sessão e retomada segura seguem
+[RF-07 detalhado na spec](../../spec.md#state-temporário-de-agentes-e-conversas--detalhamento-de-rf-07).
+PostgreSQL continua a fonte de efeitos transacionais e consumo recuperável. Checkpoint
+durável de workflow adicional é decisão pendente D-10, não nova camada obrigatória.
+
 ## Estrutura Python planejada
 
 ```text

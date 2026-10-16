@@ -9,7 +9,7 @@ Evitar novas chamadas de IA em respostas reutilizáveis sem misturar pacientes/c
 
 ## Vínculos e dependências
 
-- Requisitos: `RF-11`, `RNF-01`, `RNF-03` — [especificação](../../../spec.md).
+- Requisitos: `RF-11`, `RF-07`, `RNF-01`, `RNF-03` — [especificação](../../../spec.md).
 - Dependências: [C-009](../historias/C-009-faq-com-fontes.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,7 @@ Evitar novas chamadas de IA em respostas reutilizáveis sem misturar pacientes/c
 - [ ] Incluir contexto/permissões/versão na identidade da entrada e autorizar cada hit.
 - [ ] Shared cache contém somente conteúdo não pessoal; confirmação de write não é resposta reutilizável.
 - [ ] Invalidar/versionar após atualização documental ou de permissão; cache de agenda opcional respeita commit.
+- [ ] Hit não preenche state perdido nem recupera intenção/confirmação expirada; expiração/invalidação do cache não apaga state válido ou controles de consumo.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,11 @@ Funcionalidade: Cache autorizado antes do Agent
     Dado que a versão documental ativa foi substituída
     Quando a pergunta anterior é refeita
     Então a resposta antiga não é reutilizada como se fosse vigente
+
+  Cenário: Cache remanescente após expiração de state
+    Dado que a sessão expirou mas existe uma resposta elegível no cache
+    Quando chega uma mensagem de confirmação que depende da intenção perdida
+    Então o cache não restaura parâmetros nem confirmação e nenhuma reserva é criada
 ```
 
 ## Validação e conclusão

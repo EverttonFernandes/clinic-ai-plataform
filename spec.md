@@ -79,7 +79,7 @@ identificadores e DTOs mínimos; o compartilhamento do banco não libera SQL cru
 | RF-04 | Cancelar consulta autorizada idempotentemente, liberando capacidade e emitindo evento durável. |
 | RF-05 | Reagendar atomicamente: reservar novo/liberar antigo na mesma transação; conflito mantém a reserva original. |
 | RF-06 | getPatientData retorna somente campos permitidos do paciente autorizado e da finalidade. |
-| RF-07 | Conversation conserva contexto recente/intenções com TTL e controle de concorrência por sessão; Web permite percorrer o fluxo real. |
+| RF-07 | Conversation conserva contexto recente, intenção, parâmetros coletados e etapa do workflow em state temporário autorizado, com TTL por finalidade, versão e recuperação segura conforme a seção 7. Web permite percorrer o fluxo real. |
 | RF-08 | Agent usa tools de negócio com schemas: searchClinicKnowledge, findProfessionals, getAvailableSlots, getPatientData, create/cancel/updateAppointment. Backend controla execução. |
 | RF-09 | Upload autorizado, validação de formato/tamanho, malware scan, extração segura, sanitização/classificação e quarentena antes de embeddings. Rejeitados não são indexados. |
 | RF-10 | Ingestão assíncrona idempotente e versionada; RAG gera embedding da pergunta e busca autorizada no pgvector com Top-K limitado e fontes. Sem chunking da pergunta. |
@@ -127,13 +127,112 @@ Namespace obrigatório de tenant + clínica antes destas chaves conceituais:
 
 | Chave | Conteúdo | Política |
 | --- | --- | --- |
-| session:{sessionId} | Mensagens recentes, intenção e progresso. | TTL curto, participante validado. |
+| session:{actorId}:{sessionId} | Contexto recente, intenção, parâmetros coletados e etapa do workflow. | TTL por finalidade; vínculo de ator/sessão validado. |
 | answer-cache:{patientId}:{questionHash} | Resposta do mesmo paciente. | Autorização em cada hit; TTL próprio. |
 | shared-answer-cache:{clinicId}:{questionHash} | Resposta sem conteúdo pessoal. | Contexto/permissões/versão compatíveis. |
 | usage:{patientId} | Requests, LLM/RAG/tools, tokens input/output e custo. | Quota por janela independente da sessão. |
 
 Cache inclui contexto, permissões e versões; não reaproveitar confirmação de escrita como FAQ.
 Cache de agenda, se habilitado, tem TTL curto e invalidação recuperável em create/cancel/update.
+
+### State temporário de agentes e conversas — detalhamento de RF-07
+
+Redis já foi escolhido para estado temporário compartilhado. Seu uso aqui complementa
+RF-07 e RNF-01/03/04/08/10; não cria histórico permanente, memória de longo prazo,
+novo workflow de negócio ou requisito de retomada integral após perda do armazenamento.
+
+**Responsabilidades e conteúdo.** `conversations` possui o state por sessão: janela
+limitada de mensagens/contexto recente, intenção atual, parâmetros validados e ainda
+faltantes, etapa de execução, versão do registro e referências mínimas de execução/tool.
+O contexto inclui o vínculo confiável de tenant/clínica/ator/sessão e, quando necessário,
+paciente autorizado; ator e paciente não são identidades intercambiáveis. Registrar
+instantes de criação/atividade/expiração e versão do formato para validar a leitura.
+Confirmação fica vinculada à intenção e aos parâmetros atuais: alterá-los exige nova
+confirmação; o texto de uma mensagem ou resumo não representa autorização.
+
+| Classe | Dono / armazenamento | Expiração e fonte de verdade |
+| --- | --- | --- |
+| State de conversação e execução | `conversations`, Redis. Snapshot temporário da etapa e referências, separado do cache. | TTL de conversa/execução conforme política; perda não apaga efeitos oficiais. |
+| Cache de respostas | `conversations`, Redis; entradas pessoais e compartilhadas elegíveis separadas. | TTL próprio e invalidação por contexto/permissões/versão. Não restaura intenção nem confirmação. |
+| Consumo, quotas e reservas | `consumption`: Redis coordena contadores; PostgreSQL mantém ledger recuperável. | Janela de quota e reconciliação próprias; expirar state/cache não limpa saldo, uso ou custo incerto. |
+| Operações de negócio e entrega | Contexto de domínio/delivery, PostgreSQL. | Reservas, idempotência, inbox/outbox e resultados seguem retenção transacional; nunca dependem do TTL da conversa. |
+
+Métricas agregadas de observabilidade são derivadas e não autorizam consumo: atraso ou
+perda de telemetria não pode renovar quota nem substituir contadores/ledger de controle.
+
+**TTL e retenção.** TTLs são configuráveis pelo backend por finalidade: contexto da
+conversa, snapshot de execução, lease de concorrência e cada classe de cache/controle.
+Não presumir que tenham a mesma duração. D-09 definirá valores, limites de tamanho/número
+de mensagens, expiração fixa ou por inatividade, eventos que renovam TTL e limite máximo
+de retenção. Se houver renovação por inatividade, ela respeita esse teto. Leituras passivas,
+polling, mensagens rejeitadas e tarefas de manutenção não mantêm dados indefinidamente.
+Cliente/LLM não escolhem TTL ou removem a expiração. Escrita/atualização e política de
+expiração devem ser consistentes atomicamente, inclusive na substituição de um registro.
+Expiração é verificada antes de usar/atualizar state; não depender de notificação de chave
+expirada para impedir execução. A política deve distinguir remoção do dado ativo de
+retenção em snapshots/backups/logs, conforme D-04; TTL não prova exclusão dessas cópias.
+Se o prazo da execução terminar antes do contexto da conversa, a etapa/confirmação não
+permanece executável só porque mensagens recentes ainda estão disponíveis.
+
+**Identidade e segurança.** Todas as operações derivam tenant/clínica/ator de autenticação
+validada e verificam o vínculo com a sessão e a permissão atual para o recurso/paciente.
+Sessão de conversa é diferente da sessão/credencial de autenticação. Conhecer `sessionId`
+ou um prefixo Redis não concede acesso, nem permite enumerar outras sessões. Cache e
+state não funcionam como prova de acesso anterior: revogação de permissão impede leitura,
+retomada e nova ação, mesmo antes do TTL. Sessões de usuários distintos ou duas sessões
+do mesmo usuário não herdam parâmetros/intenções entre si; compartilhamento entre canais
+ou retomada entre identidades não é autorizado implicitamente pelo uso do mesmo número.
+
+Persistir só dados necessários à próxima etapa, preferindo referências autorizadas a
+cópias de cadastro, documentos e resultados completos de tools. Campos textuais são
+dados não confiáveis, com formato/tamanho limitados; state incompatível ou inválido não
+é executado nem desserializado como objeto arbitrário. Não guardar secrets/tokens de
+autenticação/provider nem raciocínio interno do modelo. Logs/traces registram metadados
+mínimos de expiração/conflito/recuperação, sem dumps de state. Acesso ao Redis é do backend,
+com menor privilégio e transporte protegido conforme o ambiente, mantendo os gates de CT-024.
+
+**Concorrência e ciclo de vida.** Atualizações têm versão esperada e uma ordem verificável
+por sessão entre instâncias. D-11 escolherá serialização ou atualização condicional com
+tratamento explícito de conflito; nenhuma escrita pode perder alterações silenciosamente.
+Mensagem duplicada não avança duas vezes a mesma intenção. Lease, se adotado, tem posse
+e prazo limitados, sem lock indefinido durante LLM/tool; o detentor antigo não pode liberar
+posse alheia, sobrescrever versão nova ou ressuscitar sessão encerrada/expirada. Resultado
+tardio revalida validade/versão/posse e autorização antes de avançar state ou propor novo
+efeito. Expiração/cancelamento não desfaz um commit de negócio já ocorrido.
+
+**Reinicialização e checkpoints.** Reiniciar uma instância com Redis saudável permite
+continuar uma sessão válida por outra instância, usando o último snapshot consistente.
+Retomada valida formato, prazo, autorização, versão e resultado da etapa interrompida.
+Uma etapa em andamento não equivale a concluída; resposta perdida de tool com escrita é
+reconciliada pelo serviço/idempotência no PostgreSQL, com a mesma intenção/chave. Consumo
+conhecido/incerto e os tetos da execução não são zerados para repetir uma chamada.
+Sem evidência suficiente para continuar, interromper a execução e informar o limite,
+sem replay cego. Checkpoint temporário é esse snapshot mínimo; não exige engine ou SDK.
+
+Perda/eviction de uma sessão ou expiração exige informar ausência de contexto e recolher
+somente parâmetros necessários, com nova confirmação para uma nova intenção. State ausente
+não vira uma sessão vazia reutilizando confirmação antiga; cache/log/inbox não são cópias
+automáticas para reconstruir toda a conversa. Sessão perdida/expirada não autoriza repetir
+efeito: resultados já comitados continuam consultáveis pelo contrato autorizado existente.
+Se a referência da intenção também foi perdida e o resultado é desconhecido, não criar
+automaticamente outra chave para tentar de novo; primeiro orientar a consulta autorizada
+do resultado/agenda existente. Uma nova reserva exige uma nova intenção explícita.
+Redis indisponível impede progressão que dependa de state e bloqueia operações caras até
+recuperar controles confiáveis; não fazer fallback para memória permissiva da instância.
+
+D-10 definirá se algum workflow precisa de checkpoint durável adicional no PostgreSQL,
+quais campos/etapas, retenção e perda de contexto aceitável. Isso não está aprovado como
+persistência obrigatória da conversa. RDB/AOF e restauração não garantem sozinhos ausência
+de perda nem validade do snapshot: ao restaurar, revalidar expiração, revogação e referências
+transacionais; state antigo não renova confirmações ou orçamento. Nenhum checkpoint pode
+ser a única fonte de resultados de reserva, idempotência ou registros de consumo.
+
+Critérios e cenários verificáveis ficam nas histórias existentes C-007, CT-006/008/014,
+CT-020/021/022 e nos canais C-008/C-010; a [estratégia de testes](docs/spec-driven-development/testes.md#state-temporário-rf-07)
+liga esses casos às provas esperadas. Sem valores/política definidos, D-09/10/11 não são PASS.
+Referências técnicas de suporte: [expiração Redis](https://redis.io/docs/latest/commands/expire/),
+[concorrência/transações Redis](https://redis.io/docs/latest/develop/using-commands/transactions/)
+e [persistência e seus trade-offs](https://redis.io/docs/latest/management/persistence/).
 
 ### Contratos de API
 

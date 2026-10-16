@@ -19,6 +19,7 @@ Como paciente, percorrer cadastro autorizado, catálogo e agenda pelo navegador.
 - [ ] Autenticação e sessão integradas às APIs reais; credenciais não são exemplos hardcoded.
 - [ ] Exibir sucesso, vazio, falha, limite e confirmação pendente sem inserir HTML do modelo.
 - [ ] Se houver SSE, cancelar/fechar conexão não remove limites nem repete efeitos; sem SSE obrigatório para o primeiro incremento.
+- [ ] Distinguir estado expirado/perdido de falha de autenticação; orientar recolha mínima de parâmetros e nova confirmação sem anunciar que um commit anterior foi cancelado.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,11 @@ Funcionalidade: Chat Web mínimo integrado
     Dado que a reserva foi comitada mas a resposta de rede se perdeu
     Quando o usuário tenta novamente na interface
     Então a mesma intenção é reconciliada sem duplicar a consulta
+
+  Cenário: Contexto expirado na interface
+    Dado que a sessão de conversa expirou e a autenticação continua válida
+    Quando o usuário tenta continuar uma intenção ainda não executada
+    Então a interface informa a perda de contexto e solicita os parâmetros necessários sem confirmar reserva inexistente
 ```
 
 ## Validação e conclusão

@@ -67,6 +67,33 @@ Práticas de organização/importação devem seguir as [orientações do pytest
 | Worker atrasado/versão revogada | Job obsoleto não publica nem ressuscita conteúdo. |
 | Falha após commit | Audit/invalidação/notificação recuperados sem repetir efeito de negócio. |
 
+## State temporário (RF-07)
+
+Detalhamento normativo na [spec](../../spec.md#state-temporário-de-agentes-e-conversas--detalhamento-de-rf-07).
+Casos abaixo são provas futuras, com parâmetros sintéticos declarados no plano. Valores
+de TTL/volume e garantias pendentes vêm de D-09/D-10/D-11, não de defaults inventados no teste.
+
+| Caso / histórias responsáveis | Resultado verificável |
+| --- | --- |
+| Prazo e atualização — CT-006/C-007 | Antes/no limite/depois do prazo: acesso conforme política; atualização mantém expiração, leitura passiva não prolonga retenção e LLM/cliente não altera TTL. |
+| Classes separadas — CT-006/008/014 | Expirar state preserva quota/ledger/cache ainda válido; expirar cache preserva state. Hit não restaura confirmação perdida nem executa reserva. |
+| Escopo — C-007/CT-020 | Dois tenants, duas clínicas do mesmo tenant, dois atores e duas sessões do mesmo ator: IDs válidos cruzados não leem nem alteram conteúdo; parâmetros não migram entre sessões. |
+| Permissão atual — C-007/CT-020 | Credencial inválida ou vínculo revogado impede retomada antes do TTL; identificador não revela conteúdo nem enumera sessões. |
+| Restart — C-007/CT-022 | Encerrar a API e continuar em outra instância com Redis saudável preserva snapshot válido, parâmetros e etapa, com limites originais. |
+| Concorrência — C-007/CT-022 | Barreira entre duas atualizações e mensagem duplicada: versão/conflito explícitos; resultado obsoleto não perde escolhas, recria sessão nem repete efeito. |
+| Expiração durante chamada — C-007/CT-022 | Provider controlado responde após expiração/perda de posse: state não é ressuscitado e não há nova tool autorizada pelo resultado tardio. |
+| Falha após commit — C-007/CT-021 | Interromper entre commit da tool e atualização do state: mesma intenção/chave reconcilia resultado com uma reserva/evento; ausência da referência não autoriza retry com chave nova. |
+| Ausência/perda de Redis — CT-008/021 | State ausente solicita contexto mínimo; Redis indisponível não vira memória local permissiva; perda de controles mantém chamadas caras bloqueadas até recuperação confiável. |
+| Snapshot antigo — CT-021 | Registro com prazo vencido, permissão revogada ou formato incompatível é recusado; não renova saldo nem confirmações. |
+| Minimização e retenção — C-007/CT-020 | Dados acima do limite são tratados sem execução; markers sintéticos sensíveis/segredos não aparecem em state proibido ou logs; remoção e cópias seguem política declarada. |
+| Canais — C-008/C-010 | Interface distingue autenticação de contexto expirado; replay/mensagem atrasada não reconstitui intenção do cache ou da inbox. |
+
+Usar relógio controlável para regras temporais e verificar TTL real no adapter Redis em
+integração. Falhas/restarts ocorrem apenas em ambiente de teste isolado. Inspecionar
+PostgreSQL e contagem de chamadas independentemente do texto retornado pela conversa.
+Não exigir checkpoints duráveis como condição de teste antes da decisão D-10; a prova
+deve corresponder à garantia explicitamente escolhida, incluindo perda segura de contexto.
+
 ## Evals e uso de modelos
 
 Dataset versionado por caso, expectativa, fonte autorizada e rubrica; registrar prompt/model/provider,

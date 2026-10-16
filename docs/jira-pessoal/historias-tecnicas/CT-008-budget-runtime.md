@@ -9,7 +9,7 @@ Garantir orçamento determinístico antes de habilitar providers ou loops de age
 
 ## Vínculos e dependências
 
-- Requisitos: `RNF-03`, `RNF-04` — [especificação](../../../spec.md).
+- Requisitos: `RNF-03`, `RNF-04`, `RF-07` — [especificação](../../../spec.md).
 - Dependências: [CT-007](../historias-tecnicas/CT-007-outbox-auditoria-notificacoes.md).
 - Referências: [decisões](../../spec-driven-development/decisoes.md), [testes](../../spec-driven-development/testes.md) e [ambientes/CI](../../spec-driven-development/ambientes-e-cicd.md).
 
@@ -19,6 +19,7 @@ Garantir orçamento determinístico antes de habilitar providers ou loops de age
 - [ ] Incluir embeddings, retries/fallbacks e ferramentas caras no total; ledger financeiro recuperável no PostgreSQL.
 - [ ] Expirar sessão não renova quota; timeout com cobrança incerta não libera budget indevidamente.
 - [ ] Perda de Redis bloqueia e exige recuperação confiável dos controles antes da reabertura; testes com múltiplas instâncias.
+- [ ] Retomada/reinício da execução não zera tetos nem consumo; expirar/remover state ou cache não remove ledger, reserva incerta ou quota vigente, conforme RF-07.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,11 @@ Funcionalidade: Budget cumulativo e ledger de consumo
     Dado que uma chamada possivelmente cobrada termina em timeout e o lease expira
     Quando outra chamada é solicitada
     Então o saldo incerto permanece reservado até reconciliação, sem crédito artificial
+
+  Cenário: State perdido com consumo em aberto
+    Dado que uma execução possui uso confirmado e uma chamada de custo incerto
+    Quando sua sessão expira e a aplicação reinicia
+    Então a próxima execução respeita a quota vigente e a reserva incerta sem receber saldo adicional
 ```
 
 ## Validação e conclusão
