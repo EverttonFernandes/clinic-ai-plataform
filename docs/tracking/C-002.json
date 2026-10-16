@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "C-002",
+  "title": "Cat\u00e1logo de especialidades e profissionais",
+  "type": "Neg\u00f3cio",
+  "story_path": "docs/jira-pessoal/historias/C-002-catalogo-profissionais.md",
+  "plan_path": "docs/tasks/C-002/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 8,
+    "relationship_text": "C-001",
+    "observed_at": "2026-10-16T17:54:23.879563+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "C-001",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.879567+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.879567+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-16T17:54:23.895223+00:00",
+  "authoritative_for_priority": false,
+  "features": [
+    {
+      "id": "CT-001",
+      "title": "Ambiente Docker reproduz\u00edvel",
+      "status": "TODO",
+      "path": "CT-001.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-002",
+      "title": "Harness de testes isolados e evid\u00eancias",
+      "status": "TODO",
+      "path": "CT-002.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-003",
+      "title": "CI inicial no GitHub Actions",
+      "status": "TODO",
+      "path": "CT-003.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-004",
+      "title": "Persist\u00eancia multi-tenant e migrations",
+      "status": "TODO",
+      "path": "CT-004.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-005",
+      "title": "Identidade, tenant confi\u00e1vel e fronteira de API",
+      "status": "TODO",
+      "path": "CT-005.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-006",
+      "title": "Redis e limites compartilhados de entrada",
+      "status": "TODO",
+      "path": "CT-006.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-001",
+      "title": "Consulta autorizada de dados do paciente",
+      "status": "TODO",
+      "path": "C-001.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-002",
+      "title": "Cat\u00e1logo de especialidades e profissionais",
+      "status": "TODO",
+      "path": "C-002.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-003",
+      "title": "Consulta de hor\u00e1rios dispon\u00edveis",
+      "status": "TODO",
+      "path": "C-003.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-004",
+      "title": "Reserva idempotente com prote\u00e7\u00e3o de concorr\u00eancia",
+      "status": "TODO",
+      "path": "C-004.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-005",
+      "title": "Cancelamento autorizado e idempotente",
+      "status": "TODO",
+      "path": "C-005.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-006",
+      "title": "Reagendamento at\u00f4mico",
+      "status": "TODO",
+      "path": "C-006.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-007",
+      "title": "Entrega recuper\u00e1vel de eventos e notifica\u00e7\u00f5es",
+      "status": "TODO",
+      "path": "CT-007.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-008",
+      "title": "Budget cumulativo e ledger de consumo",
+      "status": "TODO",
+      "path": "CT-008.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-009",
+      "title": "AI Gateway e provider determin\u00edstico",
+      "status": "TODO",
+      "path": "CT-009.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-010",
+      "title": "Dispatcher de tools com fronteiras de dom\u00ednio",
+      "status": "TODO",
+      "path": "CT-010.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-007",
+      "title": "Conversa com sess\u00e3o e execu\u00e7\u00e3o limitada",
+      "status": "TODO",
+      "path": "C-007.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-008",
+      "title": "Chat Web m\u00ednimo integrado",
+      "status": "TODO",
+      "path": "C-008.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-011",
+      "title": "Upload privado e valida\u00e7\u00e3o de documentos",
+      "status": "TODO",
+      "path": "CT-011.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-012",
+      "title": "Ingest\u00e3o ass\u00edncrona e vers\u00f5es completas",
+      "status": "TODO",
+      "path": "CT-012.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-013",
+      "title": "Retrieval autorizado no PostgreSQL e pgvector",
+      "status": "TODO",
+      "path": "CT-013.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-009",
+      "title": "FAQ com RAG e fontes",
+      "status": "TODO",
+      "path": "C-009.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-014",
+      "title": "Cache autorizado antes do Agent",
+      "status": "TODO",
+      "path": "CT-014.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-015",
+      "title": "Dataset e pipeline de evals offline",
+      "status": "TODO",
+      "path": "CT-015.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-016",
+      "title": "Observabilidade e FinOps de ponta a ponta",
+      "status": "TODO",
+      "path": "CT-016.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-017",
+      "title": "Contratos de depend\u00eancias e resili\u00eancia",
+      "status": "TODO",
+      "path": "CT-017.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-018",
+      "title": "Integra\u00e7\u00e3o controlada com provider real",
+      "status": "TODO",
+      "path": "CT-018.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-010",
+      "title": "Entrada WhatsApp confi\u00e1vel e inbox dur\u00e1vel",
+      "status": "TODO",
+      "path": "C-010.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-019",
+      "title": "Worker de canal e outbound recuper\u00e1vel",
+      "status": "TODO",
+      "path": "CT-019.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-020",
+      "title": "Verifica\u00e7\u00e3o adversarial e pol\u00edticas de privacidade",
+      "status": "TODO",
+      "path": "CT-020.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-021",
+      "title": "Falhas, carga, concorr\u00eancia e restaura\u00e7\u00e3o",
+      "status": "TODO",
+      "path": "CT-021.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-022",
+      "title": "Duas inst\u00e2ncias e balanceamento no laborat\u00f3rio",
+      "status": "TODO",
+      "path": "CT-022.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-023",
+      "title": "Avalia\u00e7\u00e3o de \u00edndices vetoriais e metadados",
+      "status": "TODO",
+      "path": "CT-023.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-024",
+      "title": "Destino real, secrets, TLS e prote\u00e7\u00e3o de dados",
+      "status": "TODO",
+      "path": "CT-024.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-025",
+      "title": "CI completa, release e CD controlado",
+      "status": "TODO",
+      "path": "CT-025.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "CT-026",
+      "title": "Aceite integrado e roteiro de demonstra\u00e7\u00e3o",
+      "status": "TODO",
+      "path": "CT-026.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    },
+    {
+      "id": "C-011",
+      "title": "Aprova\u00e7\u00e3o humana para a\u00e7\u00e3o de alto risco definida",
+      "status": "TODO",
+      "path": "C-011.json",
+      "started_at": null,
+      "completed_at": null,
+      "failure_count": 0
+    }
+  ]
+}

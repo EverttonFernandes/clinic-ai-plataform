@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "CT-020",
+  "title": "Verifica\u00e7\u00e3o adversarial e pol\u00edticas de privacidade",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-020-seguranca-privacidade.md",
+  "plan_path": "docs/tasks/CT-020/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 30,
+    "relationship_text": "CT-017, C-010",
+    "observed_at": "2026-10-16T17:54:23.881375+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "CT-017",
+      "reason": "Declared in Kanban"
+    },
+    {
+      "id": "C-010",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.881380+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.881380+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

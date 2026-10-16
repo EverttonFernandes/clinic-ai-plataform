@@ -1,2 +1,21 @@
-# Documentação local usada para gerar/refatorar o diagrama.
-/docs/
+# Versionar o planejamento; manter prompts e demais documentos locais privados.
+/docs/*
+!/docs/README.md
+!/docs/spec-driven-development/
+!/docs/jira-pessoal/
+!/docs/tasks/
+!/docs/entregas/
+!/docs/tracking/
+
+# Segredos e artefatos locais de desenvolvimento.
+.env
+.env.*
+!.env.example
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+/artifacts/
+/local-data/

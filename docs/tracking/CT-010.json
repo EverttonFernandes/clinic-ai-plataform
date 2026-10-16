@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "CT-010",
+  "title": "Dispatcher de tools com fronteiras de dom\u00ednio",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-010-tools-restritas.md",
+  "plan_path": "docs/tasks/CT-010/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 16,
+    "relationship_text": "CT-009",
+    "observed_at": "2026-10-16T17:54:23.880460+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "CT-009",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.880464+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.880464+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

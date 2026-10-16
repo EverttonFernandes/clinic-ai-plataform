@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "CT-023",
+  "title": "Avalia\u00e7\u00e3o de \u00edndices vetoriais e metadados",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-023-indices-vetoriais.md",
+  "plan_path": "docs/tasks/CT-023/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 33,
+    "relationship_text": "CT-022",
+    "observed_at": "2026-10-16T17:54:23.881815+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "CT-022",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.881821+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.881821+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

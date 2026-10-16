@@ -6,6 +6,19 @@ Este repositório explora essa pergunta por meio de um **SaaS multi-tenant para 
 
 O material nasceu de um desenho de System Design e foi desenvolvido em **nove pranchas editáveis no draw.io**, acompanhadas de explicações, exemplos e cenários de falha. A arquitetura V2 mantém os fluxos da V1 e explicita os controles necessários para produção: Redis, AI Gateway, tools restritas, ingestão segura e operações transacionais recuperáveis. O conteúdo publicado é um estudo de arquitetura; os serviços descritos representam uma proposta, sem implementação executável ou resultados de produção neste repositório.
 
+**Da arquitetura à implementação:** a preparação por Spec Driven Development está em
+[spec.md](spec.md), no [Kanban cronológico](docs/jira-pessoal/KANBAN-OFICIAL.md) e no
+[índice de planejamento](docs/README.md). Há histórias com critérios BDD, dependências,
+estratégia de testes e CI/CD planejados. A aplicação ainda não foi implementada.
+
+O [harness de execução](docs/spec-driven-development/harness.md) já dispõe de Ralph Loop,
+tracking de dependências/ownership e verificação local de evidências antes de Done, com
+[evals e protocolo de LLM-as-a-Judge](docs/spec-driven-development/evals-harness.md).
+Para implementar cada história: **GPT-6 Astra/medium executa → GPT-6 Sol revisa em outra
+execução → CI do SHA → PR para revisão e merge manuais pelo usuário**. A branch inclui o
+ID da história; o PR traz decisões, evidências e roteiro para estudar a mudança. Até teu
+aceite, a história permanece em Review. [Protocolo de entrega](.agents/rules/story-delivery.md).
+
 **Comece pelo [fluxo de atendimento](#atendimento), acompanhe a [busca de conhecimento](#rag) e termine na [reserva de uma consulta](#agendamento).** Para editar as nove pranchas, use o [arquivo fonte do draw.io][drawio].
 
 <a id="mapa"></a>

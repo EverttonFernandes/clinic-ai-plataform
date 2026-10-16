@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "CT-025",
+  "title": "CI completa, release e CD controlado",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-025-release-cicd.md",
+  "plan_path": "docs/tasks/CT-025/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 35,
+    "relationship_text": "CT-024, CT-023, CT-018, CT-019",
+    "observed_at": "2026-10-16T17:54:23.881954+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "CT-024",
+      "reason": "Declared in Kanban"
+    },
+    {
+      "id": "CT-023",
+      "reason": "Declared in Kanban"
+    },
+    {
+      "id": "CT-018",
+      "reason": "Declared in Kanban"
+    },
+    {
+      "id": "CT-019",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.881959+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.881959+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "CT-007",
+  "title": "Entrega recuper\u00e1vel de eventos e notifica\u00e7\u00f5es",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-007-outbox-auditoria-notificacoes.md",
+  "plan_path": "docs/tasks/CT-007/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 13,
+    "relationship_text": "C-006",
+    "observed_at": "2026-10-16T17:54:23.880238+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "C-006",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.880243+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.880243+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

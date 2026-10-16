@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "CT-019",
+  "title": "Worker de canal e outbound recuper\u00e1vel",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-019-whatsapp-outbound.md",
+  "plan_path": "docs/tasks/CT-019/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 29,
+    "relationship_text": "C-010, CT-007, C-007",
+    "observed_at": "2026-10-16T17:54:23.881317+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "C-010",
+      "reason": "Declared in Kanban"
+    },
+    {
+      "id": "CT-007",
+      "reason": "Declared in Kanban"
+    },
+    {
+      "id": "C-007",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.881322+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.881322+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

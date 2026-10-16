@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "CT-005",
+  "title": "Identidade, tenant confi\u00e1vel e fronteira de API",
+  "type": "T\u00e9cnica",
+  "story_path": "docs/jira-pessoal/historias-tecnicas/CT-005-identidade-autorizacao.md",
+  "plan_path": "docs/tasks/CT-005/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 5,
+    "relationship_text": "CT-004",
+    "observed_at": "2026-10-16T17:54:23.879320+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "CT-004",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.879325+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.879325+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}

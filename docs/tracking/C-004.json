@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "C-004",
+  "title": "Reserva idempotente com prote\u00e7\u00e3o de concorr\u00eancia",
+  "type": "Neg\u00f3cio",
+  "story_path": "docs/jira-pessoal/historias/C-004-criar-reserva.md",
+  "plan_path": "docs/tasks/C-004/plano.md",
+  "kanban_observation": {
+    "path": "docs/jira-pessoal/KANBAN-OFICIAL.md",
+    "section": "Linha principal",
+    "order": 10,
+    "relationship_text": "C-003",
+    "observed_at": "2026-10-16T17:54:23.879955+00:00"
+  },
+  "status": "TODO",
+  "dependencies": [
+    {
+      "id": "C-003",
+      "reason": "Declared in Kanban"
+    }
+  ],
+  "dependencies_reviewed": false,
+  "started_at": null,
+  "completed_at": null,
+  "updated_at": "2026-10-16T17:54:23.879960+00:00",
+  "story_exists_at_import": true,
+  "history_before_import": "UNKNOWN",
+  "completion": null,
+  "events": [
+    {
+      "at": "2026-10-16T17:54:23.879960+00:00",
+      "type": "IMPORTED",
+      "reason": "Kanban observation only; execution and dependencies not verified",
+      "reference": null
+    }
+  ]
+}
