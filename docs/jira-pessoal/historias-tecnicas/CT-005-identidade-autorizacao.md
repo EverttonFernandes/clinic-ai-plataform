@@ -19,6 +19,9 @@ Garantir identidade e autorização antes de qualquer recurso pessoal ou tool.
 - [ ] JWT/sessão exige assinatura, issuer/audience quando aplicáveis e vínculo consultado no backend; não confiar em headers livres.
 - [ ] Claims/tenant/patient propostos pela LLM ou pelo cliente não substituem identidade validada.
 - [ ] TLS na fronteira real; laboratório isolado identificado, secrets fora do Git e negativas auditáveis com minimização.
+- [ ] Resolver D-13 com matriz de capacidades/recursos/campos e contexto tenant/clínica/ator/paciente; avaliar os seis perfis candidatos no [detalhamento de segurança](../../spec-driven-development/seguranca-producao.md), sem aprovar papéis ou novos portais automaticamente. Negar por padrão e restringir delegação de grants.
+- [ ] Validar vínculo/finalidade e permissão atual em APIs, tools e consumidores; revogação tem efeito antes do TTL de credencial/state/cache. Administrador operacional não recebe acesso global a dados pessoais/médicos por herança do papel.
+- [ ] Provar matriz com acessos legítimos mínimos e negativas por papel, recurso e escopo, incluindo ausência de capacidade médica/prontuário fora do MVP; não criar endpoint clínico apenas para testar sua negação.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +44,21 @@ Funcionalidade: Identidade, tenant confiável e fronteira de API
     Dado que um ator conhece um ID válido de outro paciente do mesmo tenant
     Quando consulta o recurso
     Então a autorização de recurso nega acesso e registra evento mínimo
+
+  Cenário: Administrador operacional sem acesso pessoal
+    Dado que um administrador da plataforma possui somente capacidades operacionais
+    Quando solicita dados pessoais ou documento restrito de uma clínica
+    Então o serviço nega acesso sem tratar o papel global como autorização clínica
+
+  Cenário: Médico sem vínculo ou capacidade
+    Dado que um ator identificado como médico não tem capacidade e vínculo válidos para a agenda de outro profissional ou paciente
+    Quando solicita esse recurso por um contrato existente
+    Então o acesso é negado mesmo com identidade autenticada e IDs válidos
+
+  Cenário: Revogação de capacidade
+    Dado que uma capacidade de consulta foi revogada e ainda existe cache ou credencial válida
+    Quando a mesma operação é solicitada via API ou tool
+    Então a permissão atual prevalece sem retorno de conteúdo anterior
 ```
 
 ## Validação e conclusão

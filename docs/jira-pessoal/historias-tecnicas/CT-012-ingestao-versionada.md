@@ -19,6 +19,8 @@ Transformar documentos aprovados em jobs recuperáveis sem publicar índice parc
 - [ ] Chunking rastreável, checkpoints, limites de custo/chunks e budget antes de embeddings.
 - [ ] Upserts idempotentes, retries limitados, DLQ e reconciliação de objeto salvo/job não publicado.
 - [ ] Ativação completa condicionada à versão vigente; worker obsoleto não reativa documento revogado.
+- [ ] Processar o corpus sintético das três clínicas pelo pipeline real, preservando tenant/clínica, visibilidade, fonte e versão em todos os chunks; replay não duplica chunks e revisão de política não publica versão parcial.
+- [ ] Distinguir segurança/indexação de autorização para ativar: publicar somente versão completa sob política D-14 e grant vigente, revalidado no escopo antes da ativação. Auditar revisão/publicação e impedir worker de promover conteúdo ou visibilidade por credencial técnica ampla.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +43,21 @@ Funcionalidade: Ingestão assíncrona e versões completas
     Dado que um job antigo termina depois de uma revisão nova ou revogação
     Quando tenta ativar sua versão
     Então a ativação é rejeitada e não ressuscita conteúdo desautorizado
+
+  Cenário: Ingestão do corpus multi-clínica
+    Dado que os nove documentos sintéticos das três clínicas foram aprovados pela validação
+    Quando os jobs de ingestão concluem e são reenviados
+    Então cada versão completa possui chunks rastreáveis no escopo correto sem duplicação por replay
+
+  Cenário: Publicação autorizada
+    Dado que a versão completa passou a validação e os requisitos de revisão definidos em D-14 e tem grant de publicação vigente
+    Quando o serviço ativa a versão no escopo autorizado
+    Então o conteúdo passa a ser consultável somente conforme sua visibilidade e o evento identifica responsável e versão
+
+  Cenário: Grant revogado durante processamento
+    Dado que o job indexou uma versão mas a autorização de publicação foi revogada antes da ativação
+    Quando o worker tenta publicá-la
+    Então a ativação é negada sem ampliar acesso nem servir a versão pendente
 ```
 
 ## Validação e conclusão

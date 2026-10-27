@@ -16,9 +16,11 @@ Criar critérios de qualidade antes de conectar modelos reais ou habilitar fallb
 ## Escopo e critérios de aceite
 
 - [ ] Dataset sintético versionado com positivo, sem evidência, adversarial e isolamento.
+- [ ] Cobrir A1/A2/B1 do corpus documental com perguntas e fatos/fontes esperados por clínica, políticas divergentes e revisão documental; incluir negativa de acesso a política interna e cruzamento de clínica no mesmo tenant. Expectativas referenciam documento/versão e preservam a distinção de provider controlado versus real.
 - [ ] Avaliar tools/argumentos/trajectory, groundedness/hallucination/retrieval relevance, segurança, custo e latência.
 - [ ] Assertions determinísticas primeiro; rubricas e calibração humana para judge quando justificado.
 - [ ] Provider controlado valida harness; mudanças reais de prompt/model/provider/fallback exigem regressão real específica.
+- [ ] Usar dataset mínimo cobrindo critérios obrigatórios e A1/A2/B1; justificar expansão por risco. Judge apenas para critérios que precisem dele, com calibração; execução paga tem seleção por impacto e teto explícito de chamadas/tokens/custo. CI padrão não usa inferência paga.
 
 ## Cenários BDD de aceitação
 

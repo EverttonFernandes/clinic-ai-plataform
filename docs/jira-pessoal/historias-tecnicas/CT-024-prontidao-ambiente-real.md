@@ -19,6 +19,8 @@ Preparar o ambiente real com escolhas e controles verificáveis antes de CD.
 - [ ] Definir TLS, secrets por ambiente, least privilege, KMS/rotação, criptografia de dados/backups e Object Storage privado.
 - [ ] Testar restauração, rotação e negação de acesso; volume local/fake KMS não provam proteção real.
 - [ ] Provisionamento/publicação só com autorização e recursos definidos; gate externo pendente se infraestrutura faltar.
+- [ ] Resolver D-15 por dependência contra as metas D-05 e custo aprovado: PostgreSQL, Redis, storage, worker/jobs e providers. Definir readiness/degradação, responsáveis e alertas; medir recuperação/failover escolhido e verificar integridade/idempotência/budget após retorno.
+- [ ] Validar D-04 e condições de envio/retenção/uso dos dados pelos terceiros antes de qualquer dado real; documentar lacunas de autorização e auditoria sem tratar acesso operacional como acesso clínico.
 
 ## Cenários BDD de aceitação
 

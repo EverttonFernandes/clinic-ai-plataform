@@ -20,6 +20,7 @@ Medir comportamento sob disputa e falhas antes de aumentar instâncias ou public
 - [ ] Medir p95/throughput/erros/filas/uso em carga sintética declarada; registrar baseline sem inventar SLA.
 - [ ] Backup/restore PostgreSQL e documentos em ambiente descartável; recuperar registros/limites e medir RPO/RTO.
 - [ ] Distinguir restart da API, perda/eviction de state e indisponibilidade/perda do Redis: continuidade somente com snapshot válido; perda informa limite, mantém efeitos/consumo e não libera replay. Se houver restauração de state, validar expiração, revogação e resultado transacional.
+- [ ] Identificar pontos únicos de falha e evidências faltantes sob D-05/D-15: réplicas de API e backup não provam HA das dependências. Medir retorno ao serviço e reconciliação; ensaio de failover só é obrigatório no ambiente/estratégia que o adotar.
 
 ## Cenários BDD de aceitação
 
@@ -52,6 +53,11 @@ Funcionalidade: Falhas, carga, concorrência e restauração
     Dado que um snapshot anterior à expiração ou revogação é reapresentado à aplicação
     Quando o backend verifica sua validade antes da retomada
     Então ele não reativa a sessão nem concede autorização ou saldo anterior
+
+  Cenário: Recuperação do banco após resposta incerta
+    Dado que uma reserva pode ter sido comitada antes da indisponibilidade do PostgreSQL
+    Quando o banco retorna e a mesma intenção é consultada ou repetida com a chave original
+    Então o serviço reconcilia o resultado sem segunda reserva ou evento e registra a recuperação observada
 ```
 
 ## Validação e conclusão

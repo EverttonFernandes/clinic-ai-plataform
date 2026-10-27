@@ -16,6 +16,7 @@ etapa posterior; este índice continua dedicado ao planejamento.
 7. [Template de tarefa](tasks/TEMPLATE.md) e [template de entrega](entregas/TEMPLATE.md).
 8. [Harness de execução](spec-driven-development/harness.md), [evals e LLM-as-a-Judge](spec-driven-development/evals-harness.md) e [tracking](tracking/README.md).
 9. [Arquitetura DDD](spec-driven-development/arquitetura-ddd.md): contextos, portas/adapters, transações e evoluções LiteLLM/Databricks.
+10. [Segurança e resiliência](spec-driven-development/seguranca-producao.md): revisão de cobertura, perfis candidatos, políticas de acesso/publicação e disponibilidade proporcional ao risco.
 
 Histórias de negócio ficam em `jira-pessoal/historias/`; técnicas em `historias-tecnicas/`.
 Todas são selecionadas pelo mesmo Kanban. Não há código de aplicação ou pipeline do produto nesta etapa;

@@ -14,6 +14,7 @@ Os prompts de elaboração continuam locais e não são necessários para execut
 - Histórias: recortes de entrega e critérios de aceite; não podem reduzir a especificação.
 - [Decisões](docs/spec-driven-development/decisoes.md): escolhas de implementação e pendências.
 - [Arquitetura DDD](docs/spec-driven-development/arquitetura-ddd.md): contextos, propriedade dos dados, dependências e evoluções opcionais.
+- [Segurança e resiliência](docs/spec-driven-development/seguranca-producao.md): cobertura, autorização contextual, publicação documental, abuso e critérios de produção; detalha os requisitos existentes.
 - [Harness](docs/spec-driven-development/harness.md): protocolo e verificadores locais de execução/conclusão.
 - Diagramas/README: explicação e referências visuais; atualizar se a implementação aprovada divergir.
 
@@ -77,7 +78,7 @@ identificadores e DTOs mínimos; o compartilhamento do banco não libera SQL cru
 
 | ID | Requisito e resultado verificável |
 | --- | --- |
-| RF-01 | Autenticar atores e resolver tenantId/clinicId/paciente a partir de credenciais/mapeamento confiáveis. Negar acesso cruzado e campos de identidade propostos pelo modelo. |
+| RF-01 | Autenticar atores e resolver tenantId/clinicId/ator/paciente a partir de credenciais/mapeamento confiáveis. Autorizar por capacidade e contexto do recurso, negar por padrão e revalidar acesso nos serviços/Tools/APIs. Perfis candidatos e limites estão no detalhamento de segurança; nome de papel ou identidade proposta pelo modelo não concede acesso. |
 | RF-02 | Consultar especialidades/profissionais e horários autorizados no PostgreSQL; disponibilidade exibida não equivale a reserva. |
 | RF-03 | Criar consulta após intenção confirmada, idempotencyKey e revalidação transacional. Confirmar sucesso somente após commit. |
 | RF-04 | Cancelar consulta autorizada idempotentemente, liberando capacidade e emitindo evento durável. |
@@ -85,7 +86,7 @@ identificadores e DTOs mínimos; o compartilhamento do banco não libera SQL cru
 | RF-06 | getPatientData retorna somente campos permitidos do paciente autorizado e da finalidade. |
 | RF-07 | Conversation conserva contexto recente, intenção, parâmetros coletados e etapa do workflow em state temporário autorizado, com TTL por finalidade, versão e recuperação segura conforme a seção 7. Web permite percorrer o fluxo real. |
 | RF-08 | Agent usa tools de negócio com schemas: searchClinicKnowledge, findProfessionals, getAvailableSlots, getPatientData, create/cancel/updateAppointment. Backend controla execução. |
-| RF-09 | Upload autorizado, validação de formato/tamanho, malware scan, extração segura, sanitização/classificação e quarentena antes de embeddings. Rejeitados não são indexados. |
+| RF-09 | Autorizar envio, leitura, revisão, publicação, atualização/remoção e mudança de visibilidade documental conforme operação exposta e política D-14. Validar formato/tamanho, malware, extração, sanitização/classificação e quarentena antes de embeddings. Upload não implica permissão de publicação; versão só é ativada sob autorização vigente. Rejeitados não são indexados. |
 | RF-10 | Ingestão assíncrona idempotente e versionada; RAG gera embedding da pergunta e busca autorizada no pgvector com Top-K limitado e fontes. Sem chunking da pergunta. |
 | RF-11 | Cache de respostas antes do Agent: hit autorizado evita Agent/RAG/LLM. Separar respostas pessoais e compartilhadas não pessoais e invalidar/versionar quando necessário. |
 | RF-12 | WhatsApp valida origem/assinatura, resolve identidade, deduplica e persiste inbox/evento atomicamente antes do ACK. Processamento/outbound recuperáveis e assíncronos. |
@@ -297,6 +298,12 @@ IDEMPOTENCY_CONFLICT, SLOT_ALREADY_TAKEN, LIMIT_EXCEEDED e DEPENDENCY_UNAVAILABL
 O mapeamento HTTP será fixado nos contratos; não confundir resposta indisponível com sucesso.
 
 ## 8. Concorrência e recuperação
+
+As políticas transversais de autorização, conteúdo não confiável, orçamento agregado e
+degradação estão no [detalhamento de segurança](docs/spec-driven-development/seguranca-producao.md).
+As decisões D-13/D-14/D-15/D-16 fecham, respectivamente, matriz de capacidades, revisão
+documental, estratégia de disponibilidade por dependência e limites de abuso. Elas não
+aprovam prontuário, novos portais profissionais, formatos PDF ou infraestrutura adicional.
 
 Slots fixos e exclusivos são o primeiro recorte. Usar integridade no PostgreSQL e operação
 atômica; SELECT FOR UPDATE somente quando existe linha a bloquear. Intervalos variáveis

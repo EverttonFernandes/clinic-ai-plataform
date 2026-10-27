@@ -20,6 +20,7 @@ Garantir orçamento determinístico antes de habilitar providers ou loops de age
 - [ ] Expirar sessão não renova quota; timeout com cobrança incerta não libera budget indevidamente.
 - [ ] Perda de Redis bloqueia e exige recuperação confiável dos controles antes da reabertura; testes com múltiplas instâncias.
 - [ ] Retomada/reinício da execução não zera tetos nem consumo; expirar/remover state ou cache não remove ledger, reserva incerta ou quota vigente, conforme RF-07.
+- [ ] Reservas por execução/ator respeitam o orçamento agregado do tenant, incluindo jobs de ingestão e retries; rejeição por teto superior não deixa reserva inferior incorreta. Definir D-16 sem confundir métricas atrasadas com autorização de consumo.
 
 ## Cenários BDD de aceitação
 
@@ -47,6 +48,11 @@ Funcionalidade: Budget cumulativo e ledger de consumo
     Dado que uma execução possui uso confirmado e uma chamada de custo incerto
     Quando sua sessão expira e a aplicação reinicia
     Então a próxima execução respeita a quota vigente e a reserva incerta sem receber saldo adicional
+
+  Cenário: Jobs e conversas disputam budget
+    Dado que uma ingestão e conversas de usuários diferentes compartilham saldo de tenant que cobre só uma próxima chamada
+    Quando instâncias distintas tentam reservar a chamada simultaneamente
+    Então somente uma alcança o provider e as demais não recebem orçamento adicional nem deixam reserva incorreta
 ```
 
 ## Validação e conclusão

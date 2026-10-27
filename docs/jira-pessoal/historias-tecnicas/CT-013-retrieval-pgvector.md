@@ -19,6 +19,8 @@ Buscar trechos autorizados com embedding compatível e Top-K limitado.
 - [ ] Aplicar tenantId/clinicId/visibility/documentType/permissões/versão ativa e patientId quando aplicável na consulta.
 - [ ] Gerar embedding da pergunta após autorização/budget; não fazer chunking da pergunta.
 - [ ] Top-K possui teto de backend e fontes estáveis; índices de metadados primeiro, ANN avaliado em CT-023.
+- [ ] Validar corpus A1/A2/B1 com tópicos semelhantes e políticas divergentes: isolamento entre clínicas do mesmo tenant e entre tenants; paciente não recupera política interna restrita, mesmo que seja o trecho mais semelhante.
+- [ ] Aplicar D-16 ao número de consultas/retries, tempo e concorrência, além do Top-K; validar autorização da fonte original ao abri-la e revogação de permissão/visibilidade antes de devolver contexto ou fonte.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +43,16 @@ Funcionalidade: Retrieval autorizado no PostgreSQL e pgvector
     Dado que a LLM pede quantidade acima do teto
     Quando o serviço recebe a busca
     Então aplica o limite de backend e contabiliza embedding sem consulta ilimitada
+
+  Cenário: Clínicas do mesmo tenant
+    Dado que A1 e A2 pertencem ao mesmo tenant mas possuem políticas de atendimento diferentes
+    Quando um paciente autorizado apenas em A1 consulta a política
+    Então o resultado contém somente fontes ativas de A1 sem trechos de A2 ou B1
+
+  Cenário: Política interna restrita
+    Dado que a clínica possui uma política interna reservada a operadores
+    Quando um paciente e um operador autorizado fazem uma consulta pertinente separadamente
+    Então somente a consulta do operador pode receber o trecho interno e o paciente não o recebe no contexto
 ```
 
 ## Validação e conclusão

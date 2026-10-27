@@ -21,6 +21,7 @@ Impedir abuso de requests e preparar estado temporário compartilhado.
 - [ ] Registrar requests e rejeições sem liberar chamadas caras; orçamento monetário vem em CT-008.
 - [ ] Documentar classes separadas de state, cache e consumo e política D-09 por finalidade; state terá escopo tenant/clínica/ator/sessão, sem impor uma instância Redis por classe.
 - [ ] Gravações/atualizações temporárias mantêm expiração consistentemente; validar que o caminho de substituição não produz chave sem TTL e que valores de cliente/LLM não ampliam retenção.
+- [ ] Definir janelas de D-16 por ator e agregado de tenant, com origem/canal quando pertinente; verificar ambos atomicamente. Novos atores/sessões não renovam limite de tenant; distinguir esse controle de proteção DDoS da borda.
 
 ## Cenários BDD de aceitação
 
@@ -53,6 +54,16 @@ Funcionalidade: Redis e limites compartilhados de entrada
     Dado que state, cache e quota têm prazos distintos na política de teste
     Quando um deles expira ou é atualizado
     Então a validade dos outros não é alterada implicitamente
+
+  Cenário: Consumo distribuído por atores
+    Dado que usuários diferentes do mesmo tenant possuem quota individual mas esgotaram o limite agregado
+    Quando enviam novos pedidos concorrentes
+    Então o limite de tenant bloqueia novas admissões sem conceder saldo por usuário ou instância
+
+  Cenário: Uso legítimo dentro dos limites
+    Dado que um ator autorizado possui quota individual e o tenant possui saldo na janela
+    Quando envia um pedido válido abaixo dos limites configurados
+    Então o pedido é admitido uma vez e os contadores aplicáveis são atualizados
 ```
 
 ## Validação e conclusão

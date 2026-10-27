@@ -20,6 +20,8 @@ Revisar as fronteiras já implementadas e exercitar retenção/exclusão com dad
 - [ ] Auditoria minimizada com acesso restrito; hashes não substituem criptografia; KMS/rotação reais ficam como gate de CT-024.
 - [ ] Testar negativa antes do acesso em todos os caminhos; segurança não começa nesta história, ela verifica os controles anteriores.
 - [ ] Incluir state e snapshots/checkpoints eventualmente aprovados na retenção/exclusão e política de cópias; verificar minimização, revogação antes do TTL e ausência de payloads/credenciais em logs/traces. TTL no Redis não comprova exclusão de backups.
+- [ ] Consolidar cenários positivos/negativos de D-13/D-14 em API/tool/retrieval/fontes: administrador operacional, atendente sem publicação, paciente próprio/alheio e candidato médico sem capacidade/vínculo. Prontuário continua indisponível sem criar endpoint ou papel produtivo só para testar a negativa.
+- [ ] Registrar D-04 para dados reais, finalidade/base aplicável, responsáveis, condições de uso/retencão de terceiros e falha de auditoria; laboratório usa dados sintéticos e não afirma conformidade LGPD pelo diagrama ou pelo teste.
 
 ## Cenários BDD de aceitação
 
@@ -52,6 +54,11 @@ Funcionalidade: Verificação adversarial e políticas de privacidade
     Dado que um snapshot inválido contém texto pessoal e um valor de teste marcado como segredo
     Quando o backend registra o erro de leitura
     Então o log contém somente metadados mínimos e não expõe os valores do snapshot
+
+  Cenário: Papel não cria capacidade clínica
+    Dado que um ator possui rótulo de médico ou administrador mas o MVP não oferece capacidade de prontuário
+    Quando tenta obter acesso clínico por prompt ou parâmetro de tool
+    Então o sistema não concede capacidade nem devolve dados médicos e mantém apenas os contratos administrativos existentes
 ```
 
 ## Validação e conclusão

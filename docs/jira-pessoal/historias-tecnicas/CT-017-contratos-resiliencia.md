@@ -19,6 +19,7 @@ Consolidar contratos de provider/embeddings/notificações e degradação antes 
 - [ ] Coordenar retry/deadline e circuit breaker entre SDK/gateway/runtime; fallback somente se avaliado.
 - [ ] Separar falha de retrieval de falha de agenda; bulkhead apenas quando a disputa medida exigir.
 - [ ] Revalidar dataset e confirmar que troca de modelo não repete efeitos já persistidos.
+- [ ] Exercitar a matriz de degradação do [detalhamento de segurança](../../spec-driven-development/seguranca-producao.md): falha de provider sem alternativa, Redis e PostgreSQL não produz sucesso inventado, fallback cruzado de dados ou contadores permissivos.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,16 @@ Funcionalidade: Contratos de dependências e resiliência
     Dado que uma reserva já foi comitada antes de falha de geração
     Quando a resposta final usa alternativa segura
     Então nenhuma segunda reserva é criada e o resultado persistido é preservado
+
+  Cenário: Provider sem alternativa segura
+    Dado que o provider está indisponível e não há fallback avaliado
+    Quando uma resposta exige geração
+    Então a aplicação informa a limitação dentro do deadline sem inventar resposta ou repetir writes
+
+  Cenário: PostgreSQL indisponível
+    Dado que o PostgreSQL não está acessível e o cache mostra um horário previamente disponível
+    Quando a reserva é solicitada
+    Então ela não é confirmada pelo cache e a operação informa indisponibilidade
 ```
 
 ## Validação e conclusão

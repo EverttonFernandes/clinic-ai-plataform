@@ -19,6 +19,7 @@ Permitir capacidades limitadas sem transformar o agente em acesso genérico ao s
 - [ ] Injetar identidade/contexto/idempotencyKey pelo backend, nunca por campos de confiança da LLM.
 - [ ] Executar Tool → políticas do API Gateway → serviço; somente serviço acessa datastore.
 - [ ] Bloquear tool desconhecida, SQL/shell/HTTP arbitrário, argumentos excessivos e efeitos sem confirmação.
+- [ ] Tratar resultados de tools/RAG e resumos como dados não confiáveis: schema ou texto retornado não concede permissão. Revalidar capacidade/recurso no serviço, com escopo delegado mínimo e resultado/saída minimizados, mesmo quando o agente propõe ação incorreta.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,11 @@ Funcionalidade: Dispatcher de tools com fronteiras de domínio
     Dado que a tool call contém patientId/tenantId não autorizados
     Quando a aplicação valida o pedido
     Então não adota o contexto proposto e nenhum dado alheio é acessado
+
+  Cenário: Injeção indireta em resultado de tool
+    Dado que um resultado de consulta contém instrução para publicar documento ou acessar outro paciente
+    Quando o agente propõe uma chamada privilegiada a partir desse texto
+    Então dispatcher e serviço negam a capacidade ou recurso não autorizado sem acesso indevido nem efeito persistente
 ```
 
 ## Validação e conclusão
