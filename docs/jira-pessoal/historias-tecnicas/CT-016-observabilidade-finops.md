@@ -16,9 +16,12 @@ Explicar cada atendimento, seu custo e suas falhas sem registrar dados sensívei
 ## Escopo e critérios de aceite
 
 - [ ] Propagar correlationId/traces de edge a agent/tools/serviços/dados/providers.
+- [ ] Correlação básica nasce com os fluxos anteriores; esta história consolida a inspeção. Registrar D-18 avaliando OpenTelemetry/Langfuse por custo, recursos, acesso, retenção e mascaramento na origem. Não exigir SaaS, cluster ou stack de observabilidade adicional para o laboratório.
+- [ ] Correlacionar jobs e tentativas assíncronas; exportação falha sem impedir a jornada autorizada nem suspender budget/auditoria duráveis. Buffers/retries de telemetria têm limites; indisponibilidade fica identificável localmente.
 - [ ] Métricas de latência/erros/throughput/cache hit, passos/chamadas/chunks-scores/retries-fallback/evals.
 - [ ] Usage por tenant/ator/feature/agent, custo estimado/confirmado e alertas/bloqueios.
 - [ ] Logs minimizados; IDs em traces controlados, não labels de alta cardinalidade; sem texto clínico/prompts completos por padrão.
+- [ ] Definir limiares e responsáveis de D-16 para chamadas repetitivas, rejeições, retries, crescimento/idade da fila e consumo anômalo por tenant; alerta não substitui bloqueio determinístico e não expõe conteúdo privado.
 
 ## Cenários BDD de aceitação
 
@@ -37,10 +40,20 @@ Funcionalidade: Observabilidade e FinOps de ponta a ponta
     Quando novas operações consomem o budget
     Então o alerta é emitido e o bloqueio ocorre no teto determinístico
 
+  Cenário: Observabilidade externa indisponível
+    Dado que o exportador de telemetria está indisponível e os controles oficiais estão saudáveis
+    Quando uma jornada autorizada e um job são executados
+    Então a jornada mantém orçamento e auditoria oficiais, a falha de exportação é identificável localmente e não há retry ou buffer ilimitado
+
   Cenário: Minimização
     Dado que uma requisição contém informação pessoal sintética marcada
     Quando logs e métricas são coletados
     Então a marca não aparece em payloads indiscriminados ou labels
+
+  Cenário: Script repetitivo
+    Dado que um script autenticado tenta consumir chamadas além da janela e dos tetos definidos
+    Quando os limites são atingidos
+    Então novas operações caras são bloqueadas antes do provider e os indicadores/alertas identificam o abuso sem conteúdo pessoal
 ```
 
 ## Validação e conclusão
