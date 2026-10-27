@@ -18,7 +18,7 @@ Criar o estado durável necessário às APIs, idempotência, eventos e jobs.
 - [ ] Modelar tenant/clínica/ator/paciente/profissional/slot e vínculos com integridade referencial de escopo.
 - [ ] Planejar registros de appointment/idempotência/outbox/inbox/jobs/consumo sem tabelas para funcionalidades clínicas fora do MVP.
 - [ ] Migrations reproduzíveis em banco vazio e evolução compatível, com índices de filtros de escopo.
-- [ ] Fixtures sintéticas de dois tenants; nenhuma alteração silenciosa do schema ao iniciar requests.
+- [ ] Fixtures sintéticas de dois tenants e ao menos três clínicas (A1/A2 no tenant A e B1 no B), com especialidades, médicos e vínculos consistentes; nenhuma alteração silenciosa do schema ao iniciar requests. IDs serão reutilizados pelo corpus documental de CT-011.
 - [ ] Identificar dono de tabelas/migrations por contexto e contrato de unidade de trabalho; modelos ORM e adapters ficam na infraestrutura. Migrations de funcionalidades futuras são planejadas, não criadas antecipadamente.
 
 ## Cenários BDD de aceitação

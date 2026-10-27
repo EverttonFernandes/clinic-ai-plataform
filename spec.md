@@ -27,7 +27,7 @@ dados pessoais permitidos e agenda, e criam, cancelam ou alteram consultas via W
 O assistente interpreta intenções; serviços determinísticos protegem dados e efeitos.
 
 Personas: paciente, operador da clínica com permissões explícitas e operador da plataforma.
-Um tenant pode conter clínicas; o laboratório usará dois tenants e ao menos duas clínicas
+Um tenant pode conter clínicas; o laboratório usará dois tenants e ao menos três clínicas
 para testar autorização. A associação ator/paciente/clínica nunca vem de uma afirmação da LLM.
 
 O MVP não inclui diagnóstico, prescrição, cobrança, prontuário completo, aplicativo mobile,
@@ -133,6 +133,47 @@ entram quando C-009 estiver integrada, mantendo a demonstração M3 honesta sobr
 
 Não existe promessa de exactly-once para sistemas externos. Deduplicar efeitos locais;
 quando o destino não permitir confirmar um envio ambíguo, registrar incerteza e reconciliar.
+
+### Corpus documental sintético para ingestão e RAG
+
+Preparar, nas histórias existentes, pelo menos três clínicas inteiramente fictícias:
+Clínica Sintética A1 e A2 no tenant A, e Clínica Sintética B1 no tenant B. O corpus é
+material versionado de demonstração/teste, separado de documentos privados reais e dos
+artefatos gerados pela ingestão. A criação dos arquivos ocorre em CT-011; CT-004 prepara
+as identidades e dados estruturados correspondentes. Nesta fase ele é especificado.
+
+Cada clínica terá ao menos três documentos TXT/Markdown UTF-8, totalizando nove no corpus
+base, com conteúdo próprio e marcação explícita de que são dados fictícios:
+
+| Documento por clínica | Conteúdo esperado | Acesso esperado |
+| --- | --- | --- |
+| Especialidades e equipe médica | Especialidades, médicos fictícios, vínculos e descrições administrativas, com IDs compatíveis com o catálogo sintético. Sem CRM/contato real nem diagnóstico. | Conteúdo informativo autorizado para pacientes da clínica. |
+| Políticas de atendimento | Funcionamento, preparo administrativo, canais e orientações de agendamento/cancelamento; incluir regras diferentes entre clínicas. | Conteúdo informativo autorizado para pacientes da clínica. |
+| Políticas internas | Procedimentos operacionais fictícios, escalonamento e responsabilidades da equipe. | Apenas operadores com permissão explícita; não deve entrar no contexto do paciente. |
+
+Manifesto do dataset relaciona arquivo, `tenantId`, `clinicId`, `documentId`, tipo,
+visibilidade/permissões e versão, além dos IDs de profissionais/especialidades quando
+aplicáveis. O backend valida esses metadados sob o contexto autorizado do uploader;
+conteúdo ou nome de arquivo não escolhem o tenant/permissão. Chunks/fontes conservam a
+rastreabilidade. Pacientes sintéticos individuais, quando necessários a testes de acesso
+pessoal, continuam nas fixtures já previstas; não inserir dados pessoais reais no corpus.
+
+Seeds do catálogo no PostgreSQL e documentos usam a mesma identidade de dataset e vínculos
+consistentes. Documentos apresentam informações; disponibilidade, elegibilidade atual,
+regra efetiva de reserva e resultado de agendamento permanecem nos serviços e PostgreSQL.
+Uma política textual não altera autorização ou regra transacional automaticamente.
+
+Usar tópicos e trechos semelhantes com respostas diferentes para tornar vazamento
+detectável: por exemplo, funcionamento e orientação de cancelamento distintos entre A1,
+A2 e B1. Incluir perguntas com fontes esperadas por clínica, sem evidência e acesso
+restrito negado, além de uma revisão documental que muda uma política. Expectativas
+referenciam `documentId`/versão e fatos; não depender de IDs de chunk frágeis nem da
+redação exata de uma resposta da LLM. Corpus positivo e amostras adversariais ficam
+identificados separadamente; documentos normais percorrem upload, segurança e ingestão reais.
+
+Responsáveis: CT-004 (identidades/seeds), CT-011 (corpus/segurança), CT-012 (ingestão e
+versões), CT-013 (filtros e fontes), C-009 (FAQ por clínica), CT-015 (dataset de avaliação).
+Vetores/provider controlados validam integração; qualidade semântica real exige CT-018.
 
 ### Redis
 

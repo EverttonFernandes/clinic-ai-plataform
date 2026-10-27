@@ -15,6 +15,9 @@ Data: 2026-10-16. Estado: baseline de implementação, com decisões externas ai
 - Avaliar LiteLLM e Databricks em evoluções opcionais, com evidências práticas e custo autorizado.
 - Frontend de chat com experiência familiar inspirada no ChatGPT, detalhada na C-008;
   manter identidade própria e integração real aos módulos disponíveis.
+- Corpus de pelo menos três clínicas fictícias, com especialidades, médicos e políticas:
+  A1/A2 no mesmo tenant e B1 em outro, para verificar isolamento nas duas fronteiras.
+  CT-004 prepara seeds; CT-011 cria os documentos; CT-012/013/C-009/CT-015 demonstram o RAG.
 
 ## Escolhas iniciais e trade-offs
 

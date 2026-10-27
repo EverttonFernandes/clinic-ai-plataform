@@ -19,6 +19,7 @@ Como paciente, obter respostas documentais com fontes e limite explícito de evi
 - [ ] Usar dados sintéticos de políticas/endereço/funcionamento, sem diagnóstico.
 - [ ] Sem evidência, reconhecer limite; conteúdo recuperado não altera capacidades ou prompt de confiança.
 - [ ] Apresentar fontes e registrar versões; provider controlado prova fluxo, não qualidade de um LLM real.
+- [ ] Demonstrar perguntas equivalentes nas três clínicas do corpus sintético, com respostas/fontes próprias e políticas divergentes; especialidades/médicos documentados são coerentes com o catálogo, enquanto disponibilidade e reserva continuam nas tools de domínio.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +42,11 @@ Funcionalidade: FAQ com RAG e fontes
     Dado que um trecho inclui pedido de acessar outro paciente ou executar shell
     Quando ele é recuperado como dado
     Então nenhuma capacidade extra é concedida e a tool indevida é bloqueada
+
+  Cenário: Mesma pergunta em três clínicas
+    Dado que A1, A2 e B1 têm orientações distintas na versão ativa de seus documentos
+    Quando pacientes de cada clínica perguntam a mesma orientação de atendimento
+    Então cada resposta referencia apenas a fonte autorizada correspondente sem misturar políticas ou expor conteúdo interno
 ```
 
 ## Validação e conclusão

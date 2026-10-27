@@ -49,6 +49,12 @@ não executadas. A implementação preenche planos/entregas com comandos, result
 
 CT-026 consolida as provas; não substitui testes e segurança em cada incremento.
 
+O [corpus sintético de três clínicas](../../spec.md#corpus-documental-sintético-para-ingestão-e-rag)
+concretiza as provas de RF-09/RF-10/RNF-01/RNF-09: CT-004 cria identidades/seeds,
+CT-011 os documentos e metadados, CT-012 versões/chunks, CT-013 filtros/fontes,
+C-009 respostas por clínica e CT-015 casos de avaliação. Arquivos e ingestão permanecem
+planejados até a execução dessas histórias.
+
 ## Evoluções opcionais
 
 O [mapa DDD](arquitetura-ddd.md) detalha as fronteiras do RNF-14.

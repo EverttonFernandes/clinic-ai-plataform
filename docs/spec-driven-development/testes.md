@@ -43,7 +43,12 @@ Práticas de organização/importação devem seguir as [orientações do pytest
 
 ## Ambiente e dados
 
-- Fixtures: dois tenants, clínicas e pacientes distintos, profissionais, slots e documentos semelhantes.
+- Fixtures: dois tenants e ao menos três clínicas (A1/A2 no tenant A e B1 no B), pacientes
+  distintos, especialidades, médicos, vínculos e slots sintéticos. Corpus com ao menos nove
+  documentos conforme a [spec](../../spec.md#corpus-documental-sintético-para-ingestão-e-rag).
+- Perguntas equivalentes com políticas divergentes e fontes esperadas por clínica detectam
+  contaminação. Incluir política interna restrita, operador permitido, paciente negado,
+  ausência de evidência e substituição de versão; comparar IDs/fontes/fatos além do texto.
 - Usar banco/Redis/storage e projeto Compose de teste independentes. Cada execução possui namespace.
 - Cleanup restrito aos recursos da própria execução; nunca `down -v` genérico em desenvolvimento.
 - Relógio controlável para TTL/deadline/expiração; testes de concorrência não dependem apenas de sleep.
