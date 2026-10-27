@@ -45,7 +45,8 @@ HITL de alto risco é extensão opcional, sem ampliar automaticamente capacidade
 - Módulos por contexto de negócio, com domínio puro, aplicação, entradas e infraestrutura criados por necessidade; composição no bootstrap.
 - PostgreSQL + pgvector; Redis; documentos privados persistentes; jobs duráveis e eventos.
 - Gateway de API como fronteira lógica; AI Gateway/Model Router como módulos internos.
-- Cliente Web mínimo servido pela aplicação; não exigir framework frontend ou Node.
+- Frontend conversacional inspirado na experiência do ChatGPT, integrado à aplicação,
+  conforme C-008; framework, transporte e renderização serão definidos em D-12.
 - Provider LLM/embedding controlado em testes; integração real separada, com custo limitado.
 - CI/CD do produto planejado para GitHub Actions. A CI dos contratos do harness já está definida,
   separada da futura aplicação; execução remota ainda não foi realizada nesta preparação.
@@ -91,6 +92,15 @@ identificadores e DTOs mínimos; o compartilhamento do banco não libera SQL cru
 | RF-13 | AI Gateway controla rotas, credenciais, timeout, retry limitado, backoff/jitter, circuit breaker, accounting e fallback previamente avaliado. |
 | RF-14 | Eventos de operações relevantes alimentam auditoria e notificações recuperáveis após commit, sem exigir conversas completas. |
 | RF-15 | Extensão opcional: HITL para ação de alto risco definida, vinculada a tenant/ator/payload/prazo, com revalidação na execução. Não bloqueia o MVP administrativo. |
+
+A experiência Web de RF-07 é detalhada em
+[C-008](docs/jira-pessoal/historias/C-008-chat-web.md): navegação recolhível por sessões
+recentes válidas, Nova conversa, mensagens centrais, compositor multilinha, estados reais
+de execução, confirmação explícita e uso responsivo/acessível. Semelhança com ChatGPT
+orienta a interação, com identidade visual da plataforma. Não aprova histórico permanente,
+anexos de paciente, voz, seletor de modelos ou replay/regeneração de ações implicitamente.
+Controles de identidade, TTL, consumo e idempotência permanecem no backend. Fontes do RAG
+entram quando C-009 estiver integrada, mantendo a demonstração M3 honesta sobre seus módulos.
 
 ## 6. Invariantes e requisitos não funcionais
 

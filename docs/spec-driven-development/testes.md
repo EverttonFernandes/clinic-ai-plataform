@@ -23,7 +23,7 @@ no teste. Corrigir o setup antes de usar a falha como evidência de comportament
 | Unitário | Regra pura: estado, intenção, limites, erro, autorização sem I/O quando separável. | Doubles focados; não testar apenas chamadas internas. |
 | Integração | SQL/constraints/migrations, pgvector/filtros, Redis atômico, storage/scanner e jobs. | Serviços reais em Docker; SQLite ou dicionário não comprovam PostgreSQL/Redis. |
 | Funcional HTTP | Jornada pela interface pública com autorização, resposta e efeito persistido. | API em processo separado; cliente não chama funções internas. |
-| Web | Login/sessão, escolha/confirmação, respostas/erros e renderização segura. | Navegador contra API real; escolher automação em C-008 sem exigir frontend complexo. |
+| Web | Layout conversacional, sessões, compositor, escolha/confirmação, respostas/erros, reconexão, responsividade, teclado/foco e renderização segura. | Navegador contra API real; escolher stack/automação em D-12/C-008, sem exigir framework específico. |
 | Segurança | IDs cruzados, credencial adulterada, prompt injection, upload e cache pessoal. | Fixtures sintéticas; nenhuma exploração de terceiros. |
 | Concorrência | Disputa de slot, chave, reagendamento, sessão, budget e posse de job. | Chamadas sobrepostas com barreira e inspeção independente do estado final. |
 | Falhas/recuperação | Interrupção entre commit/publicação, Redis perdido, DLQ e backup/restore. | Somente projetos/volumes descartáveis identificados como teste. |

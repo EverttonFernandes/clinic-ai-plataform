@@ -24,6 +24,7 @@ Como paciente, continuar uma conversa e confirmar ações sem duplicá-las.
 - [ ] Expiração/encerramento não é renovado por leitura passiva ou escrita atrasada; informar perda de contexto e recolher parâmetros necessários sem reaproveitar confirmação antiga. Alterar parâmetros invalida a confirmação anterior.
 - [ ] Restart de instância retoma somente snapshot válido e etapa reconciliada; perda do Redis/state não autoriza reconstruir conversa de cache/logs, repetir tool ou zerar tetos/consumo. Reconciliar efeito persistente com a mesma intenção/chave.
 - [ ] Rejeitar state inválido/incompatível/excessivo e saída tardia de execução obsoleta sem servir conteúdo sensível, sobrescrever versão nova ou recriar sessão expirada. Logs registram metadados mínimos.
+- [ ] Disponibilizar contratos de criação/consulta e listagem mínima de sessões válidas do próprio ator para C-008, com autorização e expiração aplicadas pelo backend; listagem não expõe conteúdo/IDs de outro vínculo nem promete histórico permanente.
 
 ## Cenários BDD de aceitação
 
@@ -86,6 +87,11 @@ Funcionalidade: Conversa com sessão e execução limitada
     Dado que um snapshot tem formato incompatível ou conteúdo acima do limite registrado
     Quando a aplicação tenta carregá-lo ou atualizá-lo
     Então ela trata o erro de forma segura sem executar a etapa nem expor o payload nos logs
+
+  Cenário: Lista de conversas válidas
+    Dado que existem sessões ativas e expiradas para dois atores de clínicas distintas
+    Quando o ator solicita suas conversas recentes
+    Então o backend lista somente as sessões válidas do vínculo autorizado sem revelar as demais
 ```
 
 ## Validação e conclusão

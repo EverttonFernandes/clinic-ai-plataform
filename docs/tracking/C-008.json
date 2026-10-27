@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "C-008",
-  "title": "Chat Web m\u00ednimo integrado",
+  "title": "Chat Web conversacional inspirado no ChatGPT",
   "type": "Neg\u00f3cio",
   "story_path": "docs/jira-pessoal/historias/C-008-chat-web.md",
   "plan_path": "docs/tasks/C-008/plano.md",

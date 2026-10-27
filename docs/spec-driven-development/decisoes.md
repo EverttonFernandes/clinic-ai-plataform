@@ -13,6 +13,8 @@ Data: 2026-10-16. Estado: baseline de implementação, com decisões externas ai
   complementará o material de estudo, sem substituí-lo, resumi-lo ou deslocá-lo.
 - DDD com portas e adaptadores, tomando o WorkLink como referência e adaptando os módulos para Python.
 - Avaliar LiteLLM e Databricks em evoluções opcionais, com evidências práticas e custo autorizado.
+- Frontend de chat com experiência familiar inspirada no ChatGPT, detalhada na C-008;
+  manter identidade própria e integração real aos módulos disponíveis.
 
 ## Escolhas iniciais e trade-offs
 
@@ -28,7 +30,7 @@ Data: 2026-10-16. Estado: baseline de implementação, com decisões externas ai
 | Arquivos TXT/Markdown UTF-8 primeiro | Limitar superfície de parser e permitir RAG completo com documentos sintéticos. | PDF e formatos adicionais exigem parser isolado, limites de extração e novos testes; não habilitar por extensão apenas. |
 | Slots fixos, exclusivos e timezone explícito | Entregar reserva correta antes de intervalos/capacidade variável. | Intervalos requerem proteção contra sobreposição antes de disponibilizá-los. |
 | Provider determinístico por padrão | CI/local sem chave, custo ou internet para inferência. Integração real é uma prova distinta. | Provider real em CT-018, com evals e teto de custo; não usar resultado fake como prova de groundedness real. |
-| Web mínimo na própria aplicação | Demonstrar a jornada sem uma segunda stack de frontend. | SPA somente quando a experiência ou equipe justificar. |
+| Web conversacional inspirado no ChatGPT | Evoluir C-008 com navegação por sessões válidas, mensagens, compositor, estados e confirmações responsivas/acessíveis. UI consome contratos públicos e pode ser servida pela aplicação. | Stack/transporte/renderização ficam em D-12; sem framework ou backend adicional obrigatório só pela semelhança visual. |
 | CI cedo; CD ao final | Verificar cada incremento sem esperar todo o produto. Release/CD dependem de ambiente definido. | Não copiar jobs mobile, Sonar, metas de cobertura ou publicação do WorkLink. |
 | LiteLLM candidato | Adapter externo do AI Gateway; avaliar contrato, accounting, retry/fallback e isolamento em CT-027. | Contrato local/provider controlado continua válido; proxy não substitui automaticamente orçamento da plataforma. |
 | Databricks candidato | Projeções analíticas Bronze/Silver/Gold de dados selecionados, fora da transação operacional, em CT-028. | Começar batch incremental; CDC/streaming apenas se justificados. PostgreSQL continua fonte operacional. |
@@ -68,6 +70,7 @@ fontes; não foi identificado um PRD versionado separado. Nenhum novo domínio o
 | D-09 | Política por finalidade: TTL fixo/inatividade, eventos de renovação, teto de retenção e limites de volume do state; relação entre contexto, execução e lease. TTL de cache/quota permanece independente. Mais continuidade retém mais dados e memória. | Base em CT-006; resolver parâmetros de conversa antes de C-007; cache em CT-014; retenção real com D-04. | Não presumir minutos/dias, histórico ilimitado ou renovar por qualquer acesso; evidência depende de política explícita e dados sintéticos. |
 | D-10 | Necessidade de checkpoint durável de workflow, etapas/campos mínimos, política de retomada, perda tolerada de contexto e retenção de cópias. Comparar Redis temporário com persistência adicional; recuperação integral e replay automático não estão aprovados. | Decisão em C-007; validar falhas em CT-021, RPO/RTO com D-05 e ambiente real em CT-024. | Provar restart com state válido e comportamento seguro na perda; não criar tabela de histórico/checkpointer adicional por conveniência. Se necessário, registrar aprovação/impacto no planejamento antes de implementar. |
 | D-11 | Coordenação por sessão: serialização ou escrita condicional, tratamento de conflito/duplicata, posse e prazo de lease se usado. Comparar simplicidade, contenção, duração de chamadas e backpressure. | C-007; base Redis em CT-006 e validação ampliada em CT-022. | Não prometer ordem total/exatamente uma execução nem eleger mecanismo por padrão; conflito não pode causar perda silenciosa ou repetição de efeito. |
+| D-12 | UI de C-008: hierarquia visual/estilo, stack e automação de navegador, resposta única versus SSE, semântica de interrupção e texto simples versus Markdown seguro. Comparar experiência, acessibilidade, simplicidade operacional e testes, preservando contratos de state/consumo. | Definir layout/fluxos e registrar decisão antes de implementar C-008. | Não presumir React/Node ou streaming; critérios de interface continuam obrigatórios, histórico permanente e novas capacidades exigem planejamento próprio. |
 
 Nenhuma dessas pendências impede CT-001. Resolver decisões na história responsável,
 sem criar contas, enviar mensagens ou contratar serviços apenas para organizar o backlog.

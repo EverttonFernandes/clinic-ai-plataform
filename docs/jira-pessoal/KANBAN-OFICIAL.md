@@ -35,7 +35,7 @@ Atualizado em 2026-10-16. **Planejamento e harness preparados; nenhuma história
 | 15 | M3 | [CT-009 — AI Gateway e provider determinístico](historias-tecnicas/CT-009-ai-gateway-controlado.md) | Técnica | CT-008 | To Do |
 | 16 | M3 | [CT-010 — Dispatcher de tools com fronteiras de domínio](historias-tecnicas/CT-010-tools-restritas.md) | Técnica | CT-009 | To Do |
 | 17 | M3 | [C-007 — Conversa com sessão e execução limitada](historias/C-007-conversa-sessao.md) | Negócio | CT-010 | To Do |
-| 18 | M3 | [C-008 — Chat Web mínimo integrado](historias/C-008-chat-web.md) | Negócio | C-007 | To Do |
+| 18 | M3 | [C-008 — Chat Web conversacional inspirado no ChatGPT](historias/C-008-chat-web.md) | Negócio | C-007 | To Do |
 | 19 | M4 | [CT-011 — Upload privado e validação de documentos](historias-tecnicas/CT-011-upload-quarentena.md) | Técnica | C-008 | To Do |
 | 20 | M4 | [CT-012 — Ingestão assíncrona e versões completas](historias-tecnicas/CT-012-ingestao-versionada.md) | Técnica | CT-011 | To Do |
 | 21 | M4 | [CT-013 — Retrieval autorizado no PostgreSQL e pgvector](historias-tecnicas/CT-013-retrieval-pgvector.md) | Técnica | CT-012 | To Do |
@@ -74,7 +74,7 @@ sem alterar as dependências ou o aceite do MVP.
 | --- | --- | --- |
 | M1 | API e testes em Docker, CI pequena. | CT-003 |
 | M2 | Paciente consulta catálogo/agenda e cria/cancela/reagenda por API sem LLM. | CT-007 |
-| M3 | Chat Web usa sessão, tools e provider controlado com limites. | C-008 |
+| M3 | Chat Web responsivo com experiência inspirada no ChatGPT usa sessões válidas, tools e provider controlado com limites. | C-008 |
 | M4 | FAQ usa documento sintético real, pgvector e cache; dataset de evals executável. | CT-015 |
 | M5 | Observabilidade, contratos, integração externa e revisão adversarial. | CT-020; CT-018/CT-019 exigem suas provas externas para fechar o marco. |
 | M6 | Carga, falhas, restauração, escala e promoção controlada; seis fluxos demonstrados. | CT-026 |
