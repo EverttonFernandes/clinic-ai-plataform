@@ -15,7 +15,7 @@ Demonstrar que estado externo e limites continuam corretos entre instâncias.
 
 ## Escopo e critérios de aceite
 
-- [ ] Adicionar perfil Compose de balanceamento com ao menos duas instâncias e worker concorrente.
+- [ ] Adicionar perfil Compose de balanceamento com ao menos duas réplicas da API completa e worker concorrente do mesmo código/imagem/versão; não extrair módulos para serviços independentes.
 - [ ] Reusar Redis/PostgreSQL/storage compartilhados, pools limitados e budget global.
 - [ ] Provar ordem de sessão e posse de job; falha de uma instância não perde evento durável.
 - [ ] Comparar baseline e gargalos; não prometer autoscaling/Kubernetes nem disponibilidade de produção.

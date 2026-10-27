@@ -18,6 +18,10 @@ conditional_details:
 # Fronteiras DDD
 
 - Seguir [arquitetura DDD](../../docs/spec-driven-development/arquitetura-ddd.md).
+- Um repositório e uma release para frontend/backend; API e worker compartilham código,
+  imagem e versão. Assets do chat são servidos pela aplicação; contextos são pacotes internos.
+- Escala replica a API completa e processos do worker. Extração de microserviços exige
+  nova decisão/replanejamento aprovados; containers de dependências não mudam esse contrato.
 - Organizar por contexto, com domínio/aplicação/entradas/infraestrutura conforme comportamento real.
 - Domínio puro: sem FastAPI, ORM, Redis, SDK, ambiente ou internals de outro contexto.
 - Aplicação usa domínio e portas; bootstrap liga adapters e controla recursos.

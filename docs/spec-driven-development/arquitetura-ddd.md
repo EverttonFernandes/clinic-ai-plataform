@@ -15,6 +15,47 @@ regras de FastAPI, persistência e providers. Uma pasta ou um serviço externo n
 por si só, um bounded context; as fronteiras abaixo são a baseline e podem ser revistas
 com evidência de negócio. Não exigem deployments separados.
 
+## Unidade de repositório, aplicação e release
+
+Frontend, backend, testes, migrations, documentação e automação ficam neste mesmo
+repositório. A plataforma é um monólito modular: módulos de negócio são pacotes internos,
+integrados por contratos públicos e chamadas locais. Não criar API HTTP, repositório,
+pipeline de publicação ou banco independente para cada contexto.
+
+API e worker são entradas de execução da mesma aplicação, compartilham código e versão
+e usam a mesma imagem de runtime, com comandos de inicialização distintos. O worker
+pode ter quantidade de processos própria para jobs; isso não separa o domínio em serviços.
+O artefato da plataforma inclui os assets do frontend, servidos pela aplicação. Se D-12
+escolher toolchain de frontend, seu build é uma etapa do mesmo ciclo de entrega; não
+exige servidor frontend separado em produção. Ferramenta de desenvolvimento com hot reload
+pode ser usada localmente, sem alterar a topologia de publicação.
+
+Organização de repositório planejada, sem gerar diretórios antes das histórias:
+
+```text
+repositório/
+├── frontend/       # chat: componentes, funcionalidades e cliente dos contratos HTTP
+├── src/clinic_ai/  # aplicação Python e módulos de domínio descritos abaixo
+├── tests/         # testes de domínio, integração, jornadas e fronteiras
+├── migrations/    # sequência ordenada, com propriedade por contexto
+├── docs/          # especificação, histórias, decisões e evidências
+├── scripts/       # automação e harness
+└── .github/       # CI/CD da plataforma e contratos do harness
+```
+
+D-12 detalha os subdiretórios de `frontend` conforme a stack escolhida: componentes
+visuais reutilizáveis, funcionalidades de conversa/sessão/confirmação e cliente HTTP.
+Estado de tela/rascunho fica na UI; autorização, intenção válida, regras de reserva e
+orçamento continuam no backend. Não duplicar invariantes transacionais no navegador.
+O README da raiz mantém o guia de estudo; o futuro README da plataforma terá outro papel.
+
+Um PostgreSQL compartilhado e Redis atendem os módulos conforme seus donos e políticas.
+Scanner e eventual proxy LiteLLM são dependências técnicas; Databricks é destino analítico
+opcional. Processos/containers dessas dependências não representam microserviços de negócio.
+CT-022 replica a API completa, mantendo todos os módulos em cada réplica, e dimensiona o
+worker pelo mesmo artefato. Extrair contexto para microserviço exigiria nova decisão e
+replanejamento aprovados pelo usuário; não faz parte da execução atual.
+
 ## Contextos de negócio e propriedade dos dados
 
 | Contexto / módulo | Linguagem e responsabilidade | Dados e regras que possui | Histórias iniciais |

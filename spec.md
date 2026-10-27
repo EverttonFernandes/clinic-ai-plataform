@@ -39,6 +39,9 @@ HITL de alto risco é extensão opcional, sem ampliar automaticamente capacidade
 
 - Python + FastAPI + pytest. Aplicação, ferramentas e testes executados em Docker Compose.
 - Monólito modular com DDD e portas/adaptadores, mais worker; sem deployment obrigatório por caixa.
+- Repositório único para frontend/backend/testes/migrations; módulos de negócio são pacotes
+  internos, com uma release da plataforma. API e worker usam o mesmo código/artefato e versão;
+  assets do chat integram a aplicação publicada. Não há serviços independentes por contexto.
 - Módulos por contexto de negócio, com domínio puro, aplicação, entradas e infraestrutura criados por necessidade; composição no bootstrap.
 - PostgreSQL + pgvector; Redis; documentos privados persistentes; jobs duráveis e eventos.
 - Gateway de API como fronteira lógica; AI Gateway/Model Router como módulos internos.
@@ -102,7 +105,7 @@ identificadores e DTOs mínimos; o compartilhamento do banco não libera SQL cru
 | RNF-07 | Logs, métricas/traces de latência, erros, throughput, cache hit ratio, provider/model, prompt version, tokens/custo, chamadas, passos, chunks/scores, retries/fallbacks e evals. Sem texto sensível indiscriminado ou labels de alta cardinalidade. |
 | RNF-08 | Auditoria mínima: actor, tenant, paciente/recurso, ação, resultado, timestamp, correlationId. Minimização, finalidade, retenção/exclusão, menor privilégio; criptografia recuperável, TLS, gestão/rotação de chaves e KMS antes de dados reais. Hash não é criptografia reversível. |
 | RNF-09 | Evals versionadas cobrem tools/argumentos, groundedness, hallucination, retrieval relevance, trajetória, segurança, custo, latência e fallback. Combinar determinísticos, judge calibrado e revisão humana quando necessários. |
-| RNF-10 | Estado externo e escala horizontal de Webhook/Conversation/Agent/Scheduling/Knowledge atrás de balanceamento; limites globais, sessões ordenadas e pools limitados. Medir antes de extrair serviços. |
+| RNF-10 | Estado externo e escala horizontal por réplicas da API completa atrás de balanceamento, com os módulos Webhook/Conversation/Agent/Scheduling/Knowledge juntos; worker do mesmo artefato pode escalar por jobs. Limites globais, sessões ordenadas e pools limitados. Extração de serviços exige decisão/replanejamento aprovados. |
 | RNF-11 | Ambiente isolado e reproduzível: Docker, migrations, fixtures sintéticas, namespaces/bancos de teste independentes, cleanup restrito ao ambiente de teste e sem apagar volumes de desenvolvimento. |
 | RNF-12 | BDD antes da implementação; TDD Red → Green → revisão de coesão/refatoração pertinente → regressão. Testes por impacto e evidências executadas; sem percentual arbitrário de cobertura. |
 | RNF-13 | CI em PR com testes e análise; release imutável; CD controlado com secrets por ambiente, smoke e rollback. Não publicar nem assumir infraestrutura configurada por existir um documento. |

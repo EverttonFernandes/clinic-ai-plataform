@@ -18,7 +18,7 @@ Data: 2026-10-16. Estado: baseline de implementação, com decisões externas ai
 
 | Decisão | Problema resolvido e escolha | Alternativa / quando reconsiderar |
 | --- | --- | --- |
-| Monólito modular + worker | Preservar fronteiras do desenho com poucos processos. Gateways são módulos lógicos. | Extrair serviço quando carga ou isolamento operacional justificar. |
+| Monólito modular + worker | Um repositório para frontend/backend/testes/migrations e uma release; módulos internos por contexto. API e worker compartilham código, imagem e versão; assets Web integram o artefato. Gateways são responsabilidades lógicas. | Microserviços não fazem parte do planejamento atual; extração depende de evidência, nova decisão e replanejamento aprovados pelo usuário. |
 | DDD por contexto, com portas/adaptadores | Domínio puro e casos de uso protegidos de frameworks; tabela/migration tem dono. [Mapa e contratos](arquitetura-ddd.md). | Criar camadas e abstrações apenas ao implementar comportamento; não copiar classes/pacotes Java. |
 | PostgreSQL + pgvector e Redis | Manter a stack do desenho. Redis coordena estado efêmero/limites; PostgreSQL registra efeitos e consumo recuperável. | Não adicionar outro banco por conveniência. |
 | State temporário em Redis | Detalhar RF-07 nas histórias existentes: contexto/intenção/parâmetros/etapa por sessão, com expiração, versão e autorização. Separado de cache e consumo. | Sem promessa de histórico permanente ou recuperação integral após perda do Redis; checkpoints duráveis dependem de D-10. |

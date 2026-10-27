@@ -5,6 +5,17 @@ Makefile, testes da aplicação ou workflows do produto criados por esta prepara
 tem [utilitários e contratos locais](harness.md), separados da futura aplicação. Comandos abaixo são a interface
 proposta para CT-001/CT-002 e CT-025 implementarem, não instruções já executáveis.
 
+## Unidade de entrega do monólito modular
+
+Frontend e backend pertencem a este repositório e à mesma release. Assets do chat são
+incluídos no artefato servido pela aplicação. API e worker compartilham imagem/código e
+versão, iniciados por entradas distintas. Jobs separados de build/teste na CI podem
+validar partes do repositório, sem publicar um serviço por módulo de negócio.
+
+CT-022 escala réplicas completas da API e processos do worker. PostgreSQL, Redis, scanner
+e proxy de modelos opcional têm ciclos técnicos próprios; não são contextos de negócio
+extraídos. Estrutura e fronteiras: [mapa DDD](arquitetura-ddd.md#unidade-de-repositório-aplicação-e-release).
+
 ## Perfis de ambiente
 
 | Perfil | Finalidade | Recursos |

@@ -18,6 +18,8 @@
   Revisão de coesão obrigatória; refatoração somente com ganho concreto. Não se aplica a leitura/documentação sem código.
 - Python/FastAPI/pytest em Docker; PostgreSQL/pgvector e Redis conforme spec. Não instalar toolchains no host por conveniência.
 - Arquitetura: DDD em monólito modular com portas e adaptadores, por contexto de negócio.
+  Frontend/backend permanecem neste repositório, na mesma release; API e worker usam o
+  mesmo código/artefato e versão. Contextos são pacotes internos, sem serviços por módulo.
   Seguir [regra DDD](.agents/rules/architecture-ddd.md) e [mapa de módulos](docs/spec-driven-development/arquitetura-ddd.md).
   Criar estrutura progressivamente; LiteLLM e Databricks são evoluções opcionais no Kanban.
 - Exceção de bootstrap: coordenação Git e contratos do harness em scripts usam Git/Python stdlib
