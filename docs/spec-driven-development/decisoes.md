@@ -41,6 +41,52 @@ Data: 2026-10-16. Estado: baseline de implementação, com decisões externas ai
 O WorkLink foi referência de fila cronológica, histórias, evidências e separação DDD/hexagonal.
 A organização foi adaptada à stack Python; a implementação e os contratos deste produto são próprios.
 
+## Proporcionalidade e orçamento do projeto pessoal
+
+Revisão de 2026-10-27: preservar os conceitos e critérios existentes, exercitando-os no
+menor incremento com evidência real. O laboratório é o ambiente habitual; experimentos
+e ambiente externo são ativados por necessidade e desligados ao terminar. As 39 histórias
+são recortes de aprendizado, não 39 serviços ou deploys. A fila permanece no Kanban.
+
+| Conceito | Aplicação inicial suficiente | Evolução condicionada |
+| --- | --- | --- |
+| DDD e portas/adaptadores | Funções/tipos/pacotes por contexto, contratos públicos e portas nas fronteiras usadas; chamadas internas em processo. | Abstrações conforme comportamento/duplicação reais; sem HTTP interno, CQRS, event sourcing ou framework genérico por conveniência. |
+| Runtime e modelos | Um agente, provider controlado, rotas lógicas simples e histórico limitado. | Um modelo de geração e um de embeddings para a primeira prova autorizada; fallback real após avaliação própria, sem integrar todos os providers do desenho. |
+| Dados, filas e documentos | Um PostgreSQL com pgvector, um Redis, volume privado e jobs/inbox/outbox no PostgreSQL. API/worker compartilham imagem; worker/scanner entram quando necessários. | Broker, storage externo e serviços gerenciados somente na história correspondente e com custo autorizado. |
+| Segurança | Capacidades e vínculos mínimos, negação padrão, transações, idempotência, quarentena e auditoria reais. | Novos papéis/portais dependem de escopo aprovado; sem plataforma adicional de governança obrigatória. |
+| Testes/evals | pytest, componentes reais locais, corpus mínimo A1/A2/B1 e dataset pequeno cobrindo os riscos obrigatórios. | Aumentar volume por risco/falha medidos; avaliação paga dos casos afetados, sem judge em toda requisição. |
+| Rastreabilidade | Logs estruturados e correlação desde os primeiros fluxos; spans conforme runtime/tools/RAG/provider surgirem. | Avaliar OpenTelemetry/Langfuse na CT-016 com dados sintéticos e retenção limitada; sem stack completa adicional por padrão. |
+| Escala/disponibilidade | Uma instância habitual; ensaios limitados de duas instâncias, disputa, falha e restore locais. | HA/failover gerenciados dependem do destino real; ensaio local não comprova disponibilidade de produção. |
+| Entrega/analytics | Uma imagem/release, CI incremental e promoção controlada quando houver destino. | LiteLLM/Databricks opcionais após CT-026; sem cloud permanente para estudar contratos. |
+
+### Dois orçamentos independentes
+
+- **Produto:** D-01/D-16 definem tokens, chamadas, ingestão, tentativas e custo por
+  execução/ator/tenant. Local/CI padrão sem inferência paga; prova real exige estimativa,
+  teto explícito e autorização aplicável. Retry/fallback e custo incerto entram no total.
+- **Desenvolvimento assistido:** D-17 define esforço por história/sessão, tentativas e
+  revisões, além de custo quando observável. Selecionar um modelo não estabelece teto
+  financeiro. Sem medição, registrar a limitação; não inventar gasto nem prometer custo
+  zero de assinatura/créditos. Nenhum valor monetário novo foi aprovado.
+
+Antes de execução dispendiosa registrar escopo/casos, limites, condição de parada e
+responsável. Não renovar orçamento automaticamente. Ao atingir limite ou não avançar,
+guardar handoff e causa observada para retomada/replanejamento; sem loop indefinido.
+
+### Harness e evidências proporcionais
+
+- Preservar executor/revisor distintos e aceite humano acordados. O revisor recebe
+  história, diff, decisões e evidências pertinentes; complementos são lidos sob demanda.
+- Uma revisão independente cobre os critérios aplicáveis; novas rodadas verificam
+  correções e consumidores afetados. Sem painéis de agentes/judges ou revisões repetidas
+  sem alteração/risco novo. Gates valem apenas para a revisão efetivamente comprovada.
+- Reutilizar resultados válidos; repetir por mudança, falha, impacto ou expiração exigida
+  pelo harness, sem renovar timestamps. Suíte completa em integração/release ou risco transversal.
+- Plano/progress/entrega guardam decisões e referências; evitar copiar specs e logs integrais
+  em vários arquivos. Não ampliar o harness executável apenas para este refinamento.
+- Critério obrigatório sem prova continua PENDING. Fake/documentação não encerram
+  integração real, e recursos externos ausentes não obrigam contratar serviços.
+
 ## Decisões externas pendentes
 
 ### Revisão do state temporário na fase SDD
@@ -78,6 +124,7 @@ fontes; não foi identificado um PRD versionado separado. Nenhum novo domínio o
 | D-14 | Política de revisão/publicação documental: capacidades distintas, classificação, necessidade de revisão humana e eventual separação autor/revisor. Contrapor risco do conteúdo, auditabilidade e custo operacional. | CT-011 antes de habilitar upload/publicação; CT-012 valida ativação. | Não presumir upload como publicação nem exigir aprovação humana para todo documento. Sem autorização/política válida, versão não é ativada. |
 | D-15 | Estratégia de disponibilidade por dependência, operação/failover/recuperação, proteção de borda e responsáveis, sob metas D-05 e destino D-03. Comparar recuperação manual, redundância ou serviço gerenciado com custo/perda aceitável. | CT-021 define prova local e lacunas; CT-024 resolve ambiente real antes de CD. | Não afirmar HA por ter réplicas de API/backups; nenhuma exigência automática de cluster, multi-região ou componente novo. |
 | D-16 | Janelas/tetos por ator e agregado de tenant, uploads/bytes/chunks/buscas/backlog/concurrency, admissão/backpressure e limiares/responsáveis de alerta. Distinguir abuso financeiro de DDoS volumétrico. | CT-006/008 antes de IA; CT-011/013 para ingestão/retrieval; CT-016 consolida alertas. | Limites devem ser explícitos no plano sintético, sem prometer valores de produção; nenhuma sessão/ator/job ganha saldo adicional por particionamento indevido. |
+| D-17 | Limite de esforço do desenvolvimento assistido por história/sessão: contexto, tentativas, revisões e custo quando mensurável; definir parada e retomada. Preservar modelos e revisão independente acordados. | No plano da primeira história e antes de ampliar esforço ou consumo autorizado. | Sem valor financeiro presumido; contexto mínimo e handoff/replanejamento ao atingir limite, sem aprovar entrega incompleta. |
 
-Nenhuma dessas pendências impede CT-001. Resolver decisões na história responsável,
+Nenhuma dessas pendências impede a preparação de CT-001. Resolver decisões na história responsável,
 sem criar contas, enviar mensagens ou contratar serviços apenas para organizar o backlog.

@@ -37,6 +37,14 @@ scanner fake é útil em unitários, mas não satisfaz o gate de integração.
 
 ## Interface local proposta
 
+O perfil habitual usa apenas os componentes exigidos pela jornada atual. Scanner,
+balanceador, ferramentas de observabilidade e experimentos externos ficam sob demanda;
+encerrar o experimento sem remover volumes de desenvolvimento. Não manter homologação
+cloud permanente. Registrar recursos e duração dos ensaios conforme a
+[política de proporcionalidade](decisoes.md#proporcionalidade-e-orçamento-do-projeto-pessoal).
+O consumo de CI também deve ser limitado: cancelar runs obsoletos, reaproveitar cache
+de build e evitar matrizes redundantes; preservar os checks obrigatórios do SHA atual.
+
 | Comando futuro | Contrato a implementar | História |
 | --- | --- | --- |
 | `make up` | Construir/iniciar ambiente de desenvolvimento, esperar dependências saudáveis. | CT-001 |

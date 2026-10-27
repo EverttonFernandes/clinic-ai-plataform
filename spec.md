@@ -38,6 +38,16 @@ HITL de alto risco é extensão opcional, sem ampliar automaticamente capacidade
 
 ## 3. Base técnica acordada
 
+O nível inicial é um laboratório pessoal, local e de baixo custo. Aplicar os conceitos
+em incrementos pequenos e verificáveis, sem antecipar infraestrutura de produção.
+DDD começa com funções, tipos e pacotes por responsabilidade; portas existem nas
+fronteiras efetivamente usadas. Escala, falhas e recuperação são experimentos locais
+limitados; publicação e integrações externas têm gates próprios. Os controles de
+autorização, isolamento, idempotência e consumo acompanham cada comportamento.
+A [política de proporcionalidade](docs/spec-driven-development/decisoes.md#proporcionalidade-e-orçamento-do-projeto-pessoal)
+define o mínimo inicial, limites de execução e condições de evolução. Preparação para
+produção não equivale a operar infraestrutura de produção durante todo o desenvolvimento.
+
 - Python + FastAPI + pytest. Aplicação, ferramentas e testes executados em Docker Compose.
 - Monólito modular com DDD e portas/adaptadores, mais worker; sem deployment obrigatório por caixa.
 - Repositório único para frontend/backend/testes/migrations; módulos de negócio são pacotes

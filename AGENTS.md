@@ -44,5 +44,7 @@
 - Revisão conforme independent-review/qa-review, com modelo e execução reais; histórias não aceitam
   fallback sequencial. Revisão de manutenção antiga preserva seu modo histórico, sem relabeling.
 - Commit/release seguem Conventional Commits e SemVer na rule versioning; respeitar autorização existente.
+- Proporcionalidade e limites de esforço/custo seguem [decisões](docs/spec-driven-development/decisoes.md#proporcionalidade-e-orçamento-do-projeto-pessoal).
+  Aplicar conceitos em incrementos locais pequenos; contexto/revisão por impacto, sem infraestrutura ou loops adicionais por padrão.
 - Estado atual: preparação do produto e harness local implementado/testado. Há gates/tracking/ownership
   em scripts e CI do harness definida, mas não há aplicação, pipeline do produto ou integrações externas validadas.

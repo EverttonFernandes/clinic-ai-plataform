@@ -101,6 +101,13 @@ deve corresponder à garantia explicitamente escolhida, incluindo perda segura d
 
 ## Evals e uso de modelos
 
+Começar com o menor dataset que cubra os cenários obrigatórios e A1/A2/B1, registrando
+quantidade e motivo de cada caso. Controle determinístico não exige judge. Comparações
+com modelo/judge real usam seleção por impacto, limite de chamadas/tokens/custo e parada
+definidos antes da execução; CI habitual não chama inferência paga. Reutilizar embeddings
+de documentos inalterados com identidade de conteúdo/modelo/versão e escopo autorizados,
+sem reutilizar índice incompatível. Não repetir avaliações caras para mudança só documental.
+
 Dataset versionado por caso, expectativa, fonte autorizada e rubrica; registrar prompt/model/provider,
 schemas, retrieval, documento/índice e configuração do runtime. Incluir ferramentas erradas,
 argumentos inválidos, ausência de evidência, instruções adversariais e fallbacks.

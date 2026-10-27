@@ -5,6 +5,11 @@ Atualizado em 2026-10-16. **Planejamento e harness preparados; nenhuma história
 
 ## Como selecionar a próxima história
 
+Executar cada recorte no nível inicial de laboratório definido nas
+[decisões de proporcionalidade](../spec-driven-development/decisoes.md#proporcionalidade-e-orçamento-do-projeto-pessoal).
+O backlog completo não obriga subir todos os componentes nem executar todos os testes
+em cada iteração. Preservar critérios, provas reais e revisão independente por história.
+
 - Começar por **CT-001**. WIP inicial: uma história em Doing.
 - Escolher a primeira linha To Do cujas dependências estejam Done. A ordem é cronológica por dependência, não um prazo de calendário.
 - Não iniciar tarefas dependentes antes dos pré-requisitos. Se houver bloqueio externo, registrar motivo e retomar a primeira tarefa independente elegível, sem reordenar silenciosamente a fila.
