@@ -21,6 +21,8 @@ Criar critérios de qualidade antes de conectar modelos reais ou habilitar fallb
 - [ ] Assertions determinísticas primeiro; rubricas e calibração humana para judge quando justificado.
 - [ ] Provider controlado valida harness; mudanças reais de prompt/model/provider/fallback exigem regressão real específica.
 - [ ] Usar dataset mínimo cobrindo critérios obrigatórios e A1/A2/B1; justificar expansão por risco. Judge apenas para critérios que precisem dele, com calibração; execução paga tem seleção por impacto e teto explícito de chamadas/tokens/custo. CI padrão não usa inferência paga.
+- [ ] Aplicar o [protocolo mínimo do produto](../../spec-driven-development/testes.md#protocolo-mínimo-de-avaliação-do-produto): casos ligados a requisitos/BDD, conjunto de aceitação separado do ajuste, múltiplos turnos/esclarecimento/confirmação, fontes esperadas e ações proibidas. Separar retrieval, geração com contexto fixo e jornada completa, com rubricas por dimensão.
+- [ ] Validar avaliadores com TDD e saídas controladas corretas/incorretas; critérios críticos não são compensados por média. Relatório distingue qualidade, indisponibilidade, não executado e custo incerto. Versionar rubrica/modelo do judge quando usado e tratar instruções nos dados como não confiáveis.
 
 ## Cenários BDD de aceitação
 
@@ -43,6 +45,16 @@ Funcionalidade: Dataset e pipeline de evals offline
     Dado que o judge atribui nota diferente da revisão humana calibrada
     Quando o resultado é analisado
     Então a divergência fica registrada e não substitui assertions de segurança/integridade
+
+  Cenário: Avaliador detecta fonte sem suporte
+    Dado que uma resposta controlada cita documento existente mas afirma uma política ausente nele
+    Quando o avaliador recebe a fonte e a expectativa rotulada
+    Então reprova o suporte factual mesmo com uma citação válida e distingue esse caso do positivo sustentado
+
+  Cenário: Falha de transporte não desaparece do relatório
+    Dado que um caso falha por timeout e outro não é executado por orçamento
+    Quando o relatório é produzido
+    Então separa indisponibilidade, cobertura e qualidade sem excluir tentativas ou declarar avaliação completa
 ```
 
 ## Validação e conclusão

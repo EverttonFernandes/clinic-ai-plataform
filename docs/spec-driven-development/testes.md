@@ -41,6 +41,21 @@ Usar nomes didáticos e estrutura Given/When/Then ou Arrange/Act/Assert, com exp
 de resultado e efeitos. Evitar testes que apenas refletem a organização do código.
 Práticas de organização/importação devem seguir as [orientações do pytest](https://docs.pytest.org/en/stable/explanation/goodpractices.html).
 
+## Determinístico e probabilístico: responsabilidades de teste
+
+| Camada / responsáveis | BDD/TDD e prova futura |
+| --- | --- |
+| Domínio/API — CT-005/006/008, C-001–C-006 | Cenários positivos, negativos e fronteiras viram funcionais HTTP antes do comportamento, com Red válido, Green e regressão. Regras puras têm unitários úteis; adapters usam PostgreSQL/Redis reais. Conferir resposta, autorização, ausência/presença de efeito e registros por leitura independente. |
+| Dispatcher/runtime — CT-010, C-007 | Provider controlado propõe tool inválida, identidade adulterada, chamada duplicada, loop, erro e timeout. Os controles determinísticos devem bloquear efeito indevido mesmo se a proposta da LLM for maliciosa. |
+| Ingestão/retrieval — CT-011–CT-013 | Integração real prova filtros, versões e publicação. Embeddings controlados provam o contrato; relevância semântica com embeddings reais é prova separada em CT-018. |
+| Resposta/decisão da LLM — C-009, CT-015/018 | Casos BDD definem tarefa, fatos/fontes permitidos, comportamento esperado e proibições. Evals medem seleção/argumentos de tools, evidência, resposta e sucesso da jornada; não comparar redação exata nem exigir uma única trajetória quando alternativas são válidas. |
+
+BDD expressa o comportamento em ambas as camadas. TDD conduz código determinístico e
+avaliadores com testes repetíveis; evolução de prompt/modelo usa baseline → avaliação →
+comparação por caso. Uma resposta real ocasionalmente verde não comprova regressão resolvida.
+Nem todo critério precisa de teste separado nos três níveis: escolher a menor combinação
+que prove o comportamento e seus consumidores, sem duplicação mecânica.
+
 ## Ambiente e dados
 
 - Fixtures: dois tenants e ao menos três clínicas (A1/A2 no tenant A e B1 no B), pacientes
@@ -72,6 +87,14 @@ Práticas de organização/importação devem seguir as [orientações do pytest
 | Worker atrasado/versão revogada | Job obsoleto não publica nem ressuscita conteúdo. |
 | Falha após commit | Audit/invalidação/notificação recuperados sem repetir efeito de negócio. |
 
+CT-010/CT-017 exercitam a [fronteira comum de erros](../../spec.md#execução-de-tools-e-tratamento-de-erros):
+duas tools distintas sob a mesma política, saída sanitizada no dispatcher/HTTP, falhas
+permanentes sem retry, cancelamento/deadline e tentativa transitória sem multiplicação.
+Injetar falha depois do commit e conferir reserva/evento/resultado por leitura independente;
+retomada conserva chave/hash e autorização. Banco indisponível para reconciliação mantém
+resultado incerto. Testar chave divergente e chamadas simultâneas conforme RNF-02;
+nenhuma dessas provas é satisfeita apenas por mock do handler ou pelo texto da LLM.
+
 ## State temporário (RF-07)
 
 Detalhamento normativo na [spec](../../spec.md#state-temporário-de-agentes-e-conversas--detalhamento-de-rf-07).
@@ -87,14 +110,6 @@ de TTL/volume e garantias pendentes vêm de D-09/D-10/D-11, não de defaults inv
 | Restart — C-007/CT-022 | Encerrar a API e continuar em outra instância com Redis saudável preserva snapshot válido, parâmetros e etapa, com limites originais. |
 | Concorrência — C-007/CT-022 | Barreira entre duas atualizações e mensagem duplicada: versão/conflito explícitos; resultado obsoleto não perde escolhas, recria sessão nem repete efeito. |
 | Expiração durante chamada — C-007/CT-022 | Provider controlado responde após expiração/perda de posse: state não é ressuscitado e não há nova tool autorizada pelo resultado tardio. |
-CT-010/CT-017 exercitam a [fronteira comum de erros](../../spec.md#execução-de-tools-e-tratamento-de-erros):
-duas tools distintas sob a mesma política, saída sanitizada no dispatcher/HTTP, falhas
-permanentes sem retry, cancelamento/deadline e tentativa transitória sem multiplicação.
-Injetar falha depois do commit e conferir reserva/evento/resultado por leitura independente;
-retomada conserva chave/hash e autorização. Banco indisponível para reconciliação mantém
-resultado incerto. Testar chave divergente e chamadas simultâneas conforme RNF-02;
-nenhuma dessas provas é satisfeita apenas por mock do handler ou pelo texto da LLM.
-
 | Falha após commit — C-007/CT-021 | Interromper entre commit da tool e atualização do state: mesma intenção/chave reconcilia resultado com uma reserva/evento; ausência da referência não autoriza retry com chave nova. |
 | Ausência/perda de Redis — CT-008/021 | State ausente solicita contexto mínimo; Redis indisponível não vira memória local permissiva; perda de controles mantém chamadas caras bloqueadas até recuperação confiável. |
 | Snapshot antigo — CT-021 | Registro com prazo vencido, permissão revogada ou formato incompatível é recusado; não renova saldo nem confirmações. |
@@ -128,6 +143,53 @@ Provider controlado é o padrão local/CI e prova orquestração/contrato. Simil
 de teste não prova relevância de um modelo real. CT-018 executa avaliação real autorizada,
 com teto financeiro, dados sintéticos e fallback especificamente avaliado antes de habilitar.
 Judge remoto também é chamada paga sujeita aos mesmos controles e autorização.
+
+### Protocolo mínimo de avaliação do produto
+
+Este protocolo avalia o assistente da clínica; [evals do harness](evals-harness.md)
+avaliam o agente de desenvolvimento e não substituem essas provas.
+
+1. **Casos antes do ajuste:** registrar ID, requisito/BDD, tenant/ator, mensagens e
+   contexto inicial, fontes/versões, fatos obrigatórios, ação esperada e efeitos proibidos.
+   Incluir conversa de múltiplos turnos, correção de parâmetros, pedido ambíguo que exige
+   esclarecimento, ausência de evidência e tentativas de injeção. Manter pequeno conjunto
+   de aceitação separado dos exemplos usados para ajustar o prompt; registrar sua exposição
+   ou alteração, sem selecionar só casos favoráveis depois de observar resultados.
+2. **Isolar causas:** avaliar retrieval por fontes/documentos relevantes esperados no
+   Top-K (cobertura/recall@K e proporção relevante/precision@K quando rotulado), separando
+   esses scores do isolamento obrigatório. Avaliar geração também com contexto autorizado
+   fixo, e depois a jornada RAG completa. Citação existente não comprova suporte: verificar
+   se os fatos da resposta são sustentados pelas fontes, com rubrica/humano quando necessário.
+3. **Decisão e efeito:** avaliar tool e argumentos semanticamente, ausência de tool quando
+   cabível, confirmação/esclarecimento antes da escrita e resultado persistido. Medir
+   sucesso por tarefa, afirmações sem suporte, reconhecimento de limite, latência e custo.
+   Segurança/integridade são assertions próprias; média de qualidade nunca as compensa.
+4. **Comparação real limitada:** registrar baseline/candidato, configurações de geração,
+   revisões de prompt/tools/retriever/índice, casos e repetições planejadas por risco e teto
+   financeiro. Mesmos casos e condições comparáveis; declarar cache hit/miss e comparar
+   índice compatível ao trocar embeddings. Seed/temperatura registrados não prometem
+   determinismo. Repetir uma amostra crítica dentro do orçamento e relatar dispersão,
+   sucessos/total e falhas por caso; amostra pequena não sustenta garantia estatística.
+5. **Sem verde por seleção:** guardar todas as tentativas planejadas e falhas; não repetir
+   até passar. Timeout/erro de transporte é indisponibilidade, não nota zero de groundedness
+   nem exclusão silenciosa: separar execução, qualidade e cobertura. Informar casos não
+   executados e custo incerto. Parada por orçamento mantém a avaliação incompleta/PENDING.
+6. **Critérios prévios:** CT-015 define rubricas e critérios por dimensão; CT-018 registra
+   limiares numéricos e amostra antes de chamar o provider. Bloqueio determinístico ou falha
+   crítica observada reprova o candidato, mesmo com nota média alta. Não alterar limiar após
+   o resultado para obter aprovação. Não habilitar modelo/fallback obrigatório sem sua prova.
+
+LLM-as-a-Judge recebe pergunta, resposta e evidências mínimas autorizadas com rubrica
+versionada. Conteúdo avaliado é dado não confiável, inclusive instruções para dar nota alta.
+Registrar modelo/configuração do judge, discordâncias com amostra humana e avaliações
+inconclusivas; julgar a própria resposta não é validação independente. Se faltar evidência,
+abster-se. O judge não substitui checagem de schema, isolamento, autorização ou persistência.
+
+Os avaliadores também têm TDD: respostas controladas corretas/incorretas, fonte inexistente,
+fato sem suporte, argumento errado e vazamento devem produzir os verdicts esperados.
+Não introduzir framework de evals ou serviço SaaS obrigatório; pytest e relatórios pequenos
+versionados bastam inicialmente. Relatórios reais gerados devem ser sanitizados e referenciados
+por execução; não registrar prompts completos/dados privados por conveniência.
 
 ## Seleção por impacto
 
