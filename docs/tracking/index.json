@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-16T19:09:01.418906+00:00",
+  "generated_at": "2026-11-05T18:39:26.219283+00:00",
   "authoritative_for_priority": false,
   "features": [
     {
       "id": "CT-001",
       "title": "Ambiente Docker reproduz\u00edvel",
-      "status": "TODO",
+      "status": "IN_PROGRESS",
       "path": "CT-001.json",
-      "started_at": null,
+      "started_at": "2026-11-05T13:51:07.004808+00:00",
       "completed_at": null,
-      "failure_count": 0
+      "failure_count": 1
     },
     {
       "id": "CT-002",

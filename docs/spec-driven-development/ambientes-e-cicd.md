@@ -1,9 +1,95 @@
 # Ambiente isolado e CI/CD planejados
 
-Este documento define contratos para futuras histórias. **Não há Dockerfile, Compose,
-Makefile, testes da aplicação ou workflows do produto criados por esta preparação.** O harness de desenvolvimento
-tem [utilitários e contratos locais](harness.md), separados da futura aplicação. Comandos abaixo são a interface
-proposta para CT-001/CT-002 e CT-025 implementarem, não instruções já executáveis.
+CT-001 implementa Dockerfile, Compose, API mínima, smoke real e workflow Application CI.
+Os comandos build/up/down/smoke abaixo estão disponíveis; os demais continuam planejados.
+O [harness de desenvolvimento](harness.md) é separado da aplicação. Evidências e pendências
+remotas estão no [plano CT-001](../tasks/CT-001/plano.md); existir workflow não significa CI verde.
+
+## Operação disponível — CT-001
+
+Requisitos do host: Docker Engine/Compose funcionando e Make/Bash para os atalhos;
+Python, pip, pytest e dependências da aplicação rodam apenas nos containers.
+Validado em Docker Desktop/WSL com Engine 29.4.2 e Compose 5.1.3, Linux amd64.
+Não há garantia de outras arquiteturas sem executar o smoke correspondente.
+
+| Componente | Versão resolvida e travamento |
+| --- | --- |
+| Python | 3.13.18, base slim-bookworm por digest no Dockerfile |
+| PostgreSQL / pgvector | 17.11 / 0.8.7, imagem oficial pgvector por digest no Compose |
+| Redis servidor | 7.4.12, imagem oficial por digest no Compose |
+| FastAPI / Uvicorn | 0.162.0 / 0.54.0 |
+| psycopg / redis cliente | 3.3.8 / 7.4.1 |
+| pytest | 9.2.0, somente target test |
+
+`requirements.txt` e `requirements-test.txt` fixam também dependências transitivas,
+resolvidas via pip em containers da mesma base. Atualização exige nova resolução explícita,
+revisão e smoke; as tags legíveis das imagens estão acompanhadas de digest imutável.
+Referências dos mantenedores: [FastAPI no PyPI](https://pypi.org/project/fastapi/),
+[pgvector Docker](https://github.com/pgvector/pgvector#docker).
+
+```sh
+# Configuração sintética incluída; nenhum .env privado é necessário.
+make build
+make up
+curl --fail http://127.0.0.1:8000/health/live
+curl --fail http://127.0.0.1:8000/health/ready
+make down
+
+# Opcional: personalizar arquivo local ignorado, nunca versionar secrets.
+cp .env.example .env
+make up ENV_FILE=.env
+make down ENV_FILE=.env
+
+# Build, HTTP, pgvector/Redis reais, falhas, recuperação e persistência.
+make smoke
+```
+
+Projeto habitual `clinic-ai-dev`; `COMPOSE_PROJECT_NAME` e `API_PORT` podem ser alterados
+na configuração. API escuta internamente em 8000, publicada somente em `127.0.0.1:8000`.
+PostgreSQL 5432 e Redis 6379 são internos à rede do projeto, sem portas publicadas.
+O perfil padrão sobe API/DB/Redis; `test` contém somente o cliente pytest. Worker, scanner,
+balanceador e serviços de observabilidade ainda não entram neste incremento.
+
+`/health/live` responde 200/`alive` quando o processo atende. `/health/ready` consulta
+PostgreSQL (incluindo extensão vector) e Redis, respondendo 200/`ready` ou 503/`unavailable`.
+Não retorna mensagens internas/credenciais e não promete reserva/consumo de IA implementados.
+Timeouts limitam conexão e consultas; não há retries de Redis escondidos nesta sonda.
+API usa UID/GID 10001, filesystem somente leitura, sem capabilities e sem pytest/compilador.
+PostgreSQL e Redis usam seus entrypoints oficiais para preparar volumes e reduzir privilégios;
+não é necessário forçar UID incompatível com inicialização de volume novo.
+
+Credenciais do exemplo são públicas e exclusivamente sintéticas; a API usa a role de
+bootstrap do laboratório. Privilégios de domínio/migrations serão tratados em CT-004/005.
+O volume PostgreSQL inicializa apenas a extensão vector. Não usar este ambiente com dados
+reais nem expor as portas publicamente. Mudar POSTGRES_* não reconfigura volume já inicializado.
+
+### Falha e recuperação sem apagar dados
+
+```sh
+docker compose --env-file .env.example stop postgres
+curl -i http://127.0.0.1:8000/health/ready # 503
+curl --fail http://127.0.0.1:8000/health/live # 200
+docker compose --env-file .env.example up -d --wait --wait-timeout 120 api
+curl --fail http://127.0.0.1:8000/health/ready # 200 após recuperação
+```
+
+Repetir com `redis` exercita a outra dependência. Não remover volumes para recuperar saúde.
+`make down` remove containers/rede e preserva volumes nomeados PostgreSQL/Redis; `make up`
+reutiliza os dados. Redis usa AOF; persistência após parada normal não promete ausência de
+perda em crash, HA ou recuperação confiável de quotas futuras. Falhas de inicialização:
+conferir `docker compose --env-file .env.example ps` e logs somente do serviço afetado,
+sem publicar dados sensíveis. Docker Desktop/WSL precisa estar iniciado/integrado.
+
+Smoke cria projeto único `clinic-ai-test-<timestamp>-<pid>`, credenciais sintéticas próprias,
+porta de API aleatória em loopback e volumes separados do desenvolvimento. Ele escreve e
+confere marcadores PostgreSQL/Redis após down/up, além de verificar leitura vetorial real.
+O trap encerra apenas seu projeto; volumes são preservados até inspeção/remoção manual
+explícita pelo operador. Nenhum comando automatizado usa `down -v`. Em CI, o runner é efêmero.
+O script imprime o nome do projeto para identificar esses volumes sem adivinhar nomes.
+
+Se o helper de credenciais Docker Desktop falhar no WSL, investigar integração/daemon;
+um diretório temporário `DOCKER_CONFIG` vazio permite imagens públicas sem alterar o
+arquivo de credenciais do usuário. Não copiar tokens para scripts, docs ou logs.
 
 ## Unidade de entrega do monólito modular
 
@@ -47,8 +133,8 @@ de build e evitar matrizes redundantes; preservar os checks obrigatórios do SHA
 
 | Comando futuro | Contrato a implementar | História |
 | --- | --- | --- |
-| `make up` | Construir/iniciar ambiente de desenvolvimento, esperar dependências saudáveis. | CT-001 |
-| `make down` | Parar sem remover volumes. | CT-001 |
+| `make up` | Disponível: construir/iniciar desenvolvimento, esperar saúde. | CT-001 |
+| `make down` | Disponível: parar sem remover volumes. | CT-001 |
 | `make migrate` | Aplicar migrations explicitamente e reportar versão. | CT-004 |
 | `make seed-demo` | Criar dados sintéticos de forma repetível sem sobrescrever dados reais. | CT-004 |
 | `make test-unit` | Executar unitários em Docker, falhando se houver erro. | CT-002 |
@@ -60,7 +146,7 @@ de build e evitar matrizes redundantes; preservar os checks obrigatórios do SHA
 | `make quality` | Análise estática/format e verificações disponíveis. | CT-003 |
 | `make test` | Matriz local completa aplicável; uso em integração final/risco transversal. | Incremental |
 | `make test-load` | Carga sintética declarada em ambiente descartável. | CT-021 |
-| `make smoke` | Readiness e jornada mínima do artefato real. | CT-001, expandido por marco |
+| `make smoke` | Disponível: HTTP, falhas, recuperação e persistência reais. | CT-001, expandido por marco |
 
 Alvos não disponíveis ainda devem ser apresentados como planejados, nunca como comando
 bem-sucedido. Não criar `make clean` que apague volumes por padrão. A automação de teste só
