@@ -24,6 +24,8 @@ conditional_details:
 - Extrair quando há motivo concreto: regra repetida, responsabilidade distinta, teste difícil ou dependência indevida.
 - Evitar `utils`, `manager`, flags ambíguas, estado global implícito e comentários que apenas narram o código.
 - Erros de domínio têm significado estável; não vazar stacktrace, SQL, secrets ou nomes internos à interface do paciente.
+- Nas tools, seguir [execução e erros](../../spec.md#execução-de-tools-e-tratamento-de-erros): tratamento genérico na fronteira comum do dispatcher, adaptação HTTP no handler e tradução específica no adapter. Evitar `try/except` repetido; capturar localmente apenas com motivo concreto de tradução, recuperação ou cleanup.
+- Handler de exceção não garante idempotência nem autoriza retry. Preservar chave/escopo/hash da intenção e confirmar resultado no serviço; erro inesperado/cancelamento não vira retry genérico, sucesso ou custo zero.
 - Em script/CI, nomes devem explicar finalidade; comandos destrutivos não se escondem em cleanup genérico.
 
 Revisão usa [refactor-after-functional-green.md](refactor-after-functional-green.md);

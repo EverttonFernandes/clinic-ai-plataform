@@ -19,6 +19,8 @@ Validar o fluxo com LLM/embeddings reais, separando qualidade real de roteiro de
 - [ ] Adapter respeita limites de tokens/custo/deadline, registra usage e reconcilia chamadas incertas.
 - [ ] Rodar dataset relevante com provider real e comparação de qualidade/latência/custo; fallback só habilitado se avaliado.
 - [ ] CI padrão continua sem custo; sem autorização/credenciais, prova externa é PENDING e a história não é Done.
+- [ ] Registrar antes das chamadas baseline/candidato, casos de aceitação, amostra/repetições críticas, parâmetros e limiares por dimensão conforme [protocolo](../../spec-driven-development/testes.md#protocolo-mínimo-de-avaliação-do-produto). Relatar sucessos/total, variação, falhas, cobertura e custo sem rerun até passar ou promessa estatística com amostra pequena.
+- [ ] Provar separadamente relevância de embeddings/retrieval reais, geração com contexto autorizado fixo e jornada completa, incluindo múltiplos turnos, esclarecimento e ação confirmada. Efeitos/isolamento continuam verificados deterministicamente; judge calibrado não substitui banco ou autorização.
 
 ## Cenários BDD de aceitação
 
@@ -41,6 +43,16 @@ Funcionalidade: Integração controlada com provider real
     Dado que um modelo alternativo está configurado mas não aprovado por evals
     Quando o primário falha
     Então a alternativa não é habilitada silenciosamente e a resposta degrada explicitamente
+
+  Cenário: Candidato varia entre execuções
+    Dado que casos e repetições foram definidos dentro de um teto autorizado antes da execução
+    Quando o modelo candidato apresenta resultados diferentes nas tentativas
+    Então todas as tentativas e falhas entram na comparação com a baseline e uma falha crítica impede aprovação mesmo com média alta
+
+  Cenário: Avaliação interrompida pelo orçamento
+    Dado que o teto restante não cobre as repetições planejadas
+    Quando a próxima chamada seria executada
+    Então ela é bloqueada e o relatório indica a cobertura incompleta sem aprovar o modelo ou renovar saldo
 ```
 
 ## Validação e conclusão

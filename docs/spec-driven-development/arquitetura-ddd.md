@@ -152,6 +152,12 @@ tool e worker; chamar internamente nunca concede permissão extra.
 
 ## Agregados e transações: exemplo de reserva
 
+O dispatcher possui uma fronteira comum de execução/tradução de erros das tools, conforme
+o [contrato da spec](../../spec.md#execução-de-tools-e-tratamento-de-erros). Handler HTTP
+traduz para transporte; adapters traduzem falhas específicas; serviços mantêm domínio,
+transação e idempotência. Uma função compartilhada basta inicialmente: não criar framework
+de interceptadores/decorators por tool nem um handler global que decida regras de negócio.
+
 `Appointment` representa o ciclo de uma consulta; `Slot` representa capacidade exclusiva
 da agenda. Paciente e profissional são referências por ID, não objetos carregados dentro
 do agregado. Value objects como intervalo de horário e chave de idempotência protegem

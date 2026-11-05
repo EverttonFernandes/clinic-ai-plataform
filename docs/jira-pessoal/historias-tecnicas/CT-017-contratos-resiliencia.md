@@ -17,6 +17,7 @@ Consolidar contratos de provider/embeddings/notificações e degradação antes 
 
 - [ ] Definir contrato verificável de capacidades, schemas, usage e erros transitórios/permanentes.
 - [ ] Coordenar retry/deadline e circuit breaker entre SDK/gateway/runtime; fallback somente se avaliado.
+- [ ] Consolidar o tratamento de tools definido em CT-010: um dono de retry por chamada, sem repetir falhas de validação/autorização/conflito/erro inesperado. Retry transitório seguro preserva intenção/chave/hash, budget e deadline; falha após commit exige reconciliação, não nova escrita.
 - [ ] Separar falha de retrieval de falha de agenda; bulkhead apenas quando a disputa medida exigir.
 - [ ] Revalidar dataset e confirmar que troca de modelo não repete efeitos já persistidos.
 - [ ] Exercitar a matriz de degradação do [detalhamento de segurança](../../spec-driven-development/seguranca-producao.md): falha de provider sem alternativa, Redis e PostgreSQL não produz sucesso inventado, fallback cruzado de dados ou contadores permissivos.
@@ -52,6 +53,11 @@ Funcionalidade: Contratos de dependências e resiliência
     Dado que o PostgreSQL não está acessível e o cache mostra um horário previamente disponível
     Quando a reserva é solicitada
     Então ela não é confirmada pelo cache e a operação informa indisponibilidade
+
+  Cenário: Retry sem multiplicação entre camadas
+    Dado que um adapter de leitura falha transitoriamente e há um limite total de tentativas declarado
+    Quando a chamada atravessa runtime, dispatcher e adapter
+    Então somente a camada responsável agenda retries e o número real de chamadas respeita o limite e o orçamento cumulativo
 ```
 
 ## Validação e conclusão

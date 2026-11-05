@@ -1,7 +1,7 @@
 # Kanban oficial — Clínica IA
 
 Fila única de implementação baseada na [especificação](../../spec.md).
-Atualizado em 2026-10-16. **Planejamento e harness preparados; nenhuma história de aplicação iniciada.**
+Atualizado em 2026-10-16. **CT-001 em execução; Docker restabelecido nesta sessão. Demais histórias não iniciadas.**
 
 ## Como selecionar a próxima história
 
@@ -23,7 +23,7 @@ em cada iteração. Preservar critérios, provas reais e revisão independente p
 
 | Ordem | Marco | História | Tipo | Dependências | Estado |
 | --- | --- | --- | --- | --- | --- |
-| 01 | M1 | [CT-001 — Ambiente Docker reproduzível](historias-tecnicas/CT-001-ambiente-docker.md) | Técnica | — | To Do |
+| 01 | M1 | [CT-001 — Ambiente Docker reproduzível](historias-tecnicas/CT-001-ambiente-docker.md) | Técnica | — | Doing |
 | 02 | M1 | [CT-002 — Harness de testes isolados e evidências](historias-tecnicas/CT-002-harness-testes.md) | Técnica | CT-001 | To Do |
 | 03 | M1 | [CT-003 — CI inicial no GitHub Actions](historias-tecnicas/CT-003-ci-inicial.md) | Técnica | CT-002 | To Do |
 | 04 | M2 | [CT-004 — Persistência multi-tenant e migrations](historias-tecnicas/CT-004-persistencia-migrations.md) | Técnica | CT-003 | To Do |
@@ -59,6 +59,8 @@ em cada iteração. Preservar critérios, provas reais e revisão independente p
 | 34 | M6 | [CT-024 — Destino real, secrets, TLS e proteção de dados](historias-tecnicas/CT-024-prontidao-ambiente-real.md) | Técnica | CT-021 | To Do |
 | 35 | M6 | [CT-025 — CI completa, release e CD controlado](historias-tecnicas/CT-025-release-cicd.md) | Técnica | CT-024, CT-023, CT-018, CT-019 | To Do |
 | 36 | M6 | [CT-026 — Aceite integrado e roteiro de demonstração](historias-tecnicas/CT-026-aceite-seis-fluxos.md) | Técnica | CT-025 | To Do |
+
+CT-001: Docker Desktop iniciado com autorização do usuário em 2026-11-05; ambiente disponível. [Plano e histórico](../tasks/CT-001/plano.md).
 
 ## Backlog opcional
 

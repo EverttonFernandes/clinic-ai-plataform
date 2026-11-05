@@ -26,6 +26,7 @@ conditional_details:
 - Revisar coesão e clareza após validação; refatorar somente o necessário e reexecutar regressões.
 - Casos de autorização, concorrência e custo acompanham cada incremento relevante.
 - Gherkin nas histórias ainda é documentação, não evidência de teste executado.
+- Avaliadores e controles da LLM também têm TDD determinístico; qualidade do modelo real usa BDD/dataset, baseline e comparação por caso conforme o [protocolo de evals](../../docs/spec-driven-development/testes.md#protocolo-mínimo-de-avaliação-do-produto). Não exigir texto idêntico nem rerun até passar; provider controlado não comprova qualidade real.
 
 Em refatoração coberta, obter baseline verde antes de alterar estrutura. Em tarefa somente
 documental, TDD/BDD executável não se aplica: validar links, conteúdo e coerência.

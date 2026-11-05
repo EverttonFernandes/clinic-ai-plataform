@@ -1,0 +1,8 @@
+*
+!requirements.txt
+!requirements-test.txt
+!src/
+!src/**
+!tests/
+!tests/functional/
+!tests/functional/**

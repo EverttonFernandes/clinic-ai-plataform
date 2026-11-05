@@ -1,0 +1,81 @@
+name: ${COMPOSE_PROJECT_NAME:-clinic-ai-dev}
+
+x-database-environment: &database-environment
+  PGHOST: postgres
+  PGPORT: "5432"
+  PGDATABASE: ${POSTGRES_DB:-clinic_ai}
+  PGUSER: ${POSTGRES_USER:-clinic_lab}
+  PGPASSWORD: ${POSTGRES_PASSWORD:-synthetic-local-only}
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg17-trixie@sha256:01215e09bd4bd582d20230e025b6c971deeeffee49ceef1aae167e839cb62a7e
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-clinic_ai}
+      POSTGRES_USER: ${POSTGRES_USER:-clinic_lab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-synthetic-local-only}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/001-vector.sql:/docker-entrypoint-initdb.d/001-vector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  redis:
+    image: redis:7.4-alpine@sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build:
+      context: .
+      target: runtime
+    environment:
+      <<: *database-environment
+      REDIS_HOST: redis
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5).close()"]
+      interval: 2s
+      timeout: 6s
+      retries: 30
+      start_period: 5s
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+
+  smoke:
+    profiles: [test]
+    build:
+      context: .
+      target: test
+    environment:
+      <<: *database-environment
+      API_URL: http://api:8000
+      REDIS_HOST: redis
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+
+volumes:
+  postgres-data:
+  redis-data:
