@@ -307,6 +307,35 @@ Sem credenciais no payload de tools. Prever AUTH_REQUIRED, ACCESS_DENIED, VALIDA
 IDEMPOTENCY_CONFLICT, SLOT_ALREADY_TAKEN, LIMIT_EXCEEDED e DEPENDENCY_UNAVAILABLE.
 O mapeamento HTTP será fixado nos contratos; não confundir resposta indisponível com sucesso.
 
+### Execução de tools e tratamento de erros
+
+CT-010 estabelece uma fronteira comum no dispatcher para validar/autorizar chamadas,
+executar adapters de tools e traduzir falhas em resultados estruturados e sanitizados.
+Cada tool mantém sua responsabilidade; não copiar tratamento genérico, logging e retry
+em todas elas. Handler HTTP adapta o mesmo significado de erro ao transporte; ele não
+substitui a fronteira do dispatcher para chamadas internas ou workers.
+
+Adapters traduzem exceções específicas de dependências quando necessário; casos de uso
+preservam erros de domínio, transações e rollback. Capturar localmente só quando houver
+recuperação, tradução ou liberação de recurso concreta. Não silenciar erro, retornar
+sucesso fictício ou converter indiscriminadamente toda exceção em falha transitória.
+Falha inesperada gera erro interno seguro com correlação; detalhes técnicos ficam
+restritos a logs minimizados. Cancelamento/deadline encerra novas etapas e não é
+reclassificado como falha comum para continuar o loop; não implica rollback de commit.
+
+Idempotência é garantida pelo serviço transacional, não pelo handler global. O backend
+associa uma chave estável à intenção confirmada, preservando escopo e hash nos retries,
+na retomada e no fallback. Revalidar autorização antes de devolver resultado persistido.
+Exceção/timeout não prova ausência de commit: consultar/repetir com a mesma chave; se a
+reconciliação estiver indisponível, informar resultado incerto sem nova intenção ou chave.
+Leituras não exigem registro idempotente, mas continuam sujeitas a quotas e autorização.
+
+CT-017 consolida a classificação já usada desde CT-010: validação, autorização, conflito
+de negócio e erro inesperado não recebem retry automático. Falha transitória só permite
+retry se a operação for segura/reconciliável e houver tentativas, budget e deadline.
+Definir um dono de retry por chamada e evitar multiplicação entre SDK, adapter,
+dispatcher e runtime; falha posterior à reserva não repete a operação de domínio.
+
 ## 8. Concorrência e recuperação
 
 As políticas transversais de autorização, conteúdo não confiável, orçamento agregado e

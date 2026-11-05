@@ -20,6 +20,9 @@ Permitir capacidades limitadas sem transformar o agente em acesso genérico ao s
 - [ ] Executar Tool → políticas do API Gateway → serviço; somente serviço acessa datastore.
 - [ ] Bloquear tool desconhecida, SQL/shell/HTTP arbitrário, argumentos excessivos e efeitos sem confirmação.
 - [ ] Tratar resultados de tools/RAG e resumos como dados não confiáveis: schema ou texto retornado não concede permissão. Revalidar capacidade/recurso no serviço, com escopo delegado mínimo e resultado/saída minimizados, mesmo quando o agente propõe ação incorreta.
+- [ ] Implementar fronteira comum de execução e tradução de erros no dispatcher conforme a [spec](../../../spec.md#execução-de-tools-e-tratamento-de-erros), reutilizada pelas tools. Handler HTTP e worker preservam o contrato; sem copiar `try/except`, logging ou retry genérico em cada tool.
+- [ ] Distinguir validação/autorização/conflito, falha transitória, falha inesperada e resultado incerto; retornar erro seguro com correlação. Capturas específicas permanecem nos adapters quando justificadas; cancelamento/deadline interrompe novas etapas sem declarar rollback de commit.
+- [ ] Preservar chave/escopo/hash da intenção pelo backend; serviço transacional garante único efeito. Em erro após commit, reconciliar ou repetir com a mesma chave e autorização atual; não gerar chave nova nem renovar budget. Não repetir automaticamente erros permanentes/inesperados; retry seguro tem um dono e limites totais.
 
 ## Cenários BDD de aceitação
 
@@ -50,6 +53,35 @@ Funcionalidade: Dispatcher de tools com fronteiras de domínio
 ```
 
 ## Validação e conclusão
+
+Provas adicionais obrigatórias, ainda planejadas:
+
+```gherkin
+  Cenário: Fronteira comum para tools distintas
+    Dado que duas tools distintas podem lançar falhas inesperadas com marcador sintético sensível
+    Quando são executadas pelo dispatcher e uma delas pelo endpoint HTTP consumidor
+    Então a mesma política gera erro interno seguro com correlação sem revelar o marcador nem retornar sucesso ou repetir chamadas
+
+  Cenário: Exceção após commit
+    Dado que a reserva, o resultado idempotente e o evento foram comitados e a entrega do resultado da tool falha
+    Quando o backend retoma a intenção autorizada com a mesma chave e payload
+    Então recupera o resultado persistido com uma única reserva e evento sem renovar orçamento
+
+  Cenário: Erro de negócio ou autorização
+    Dado que a tool é negada por autorização ou encontra slot ocupado
+    Quando o dispatcher traduz a falha
+    Então mantém o significado estável sem retry automático nem novo efeito
+
+  Cenário: Resultado incerto sem reconciliação disponível
+    Dado que houve timeout em uma escrita e o banco está indisponível para consultar o resultado
+    Quando o dispatcher devolve o estado da operação
+    Então informa a incerteza sem alegar rollback ou sucesso e preserva a mesma intenção e chave para reconciliação
+
+  Cenário: Cancelamento durante execução
+    Dado que o turno é cancelado ou seu deadline é atingido durante uma chamada
+    Quando o controle retorna ao dispatcher
+    Então não agenda nova tool ou retry e preserva a reconciliação de eventual efeito comitado
+```
 
 Funcionais passando por políticas reais e serviços existentes; verificação independente de efeitos e ausência de conexões não permitidas.
 

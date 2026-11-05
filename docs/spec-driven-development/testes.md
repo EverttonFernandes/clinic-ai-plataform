@@ -87,6 +87,14 @@ de TTL/volume e garantias pendentes vêm de D-09/D-10/D-11, não de defaults inv
 | Restart — C-007/CT-022 | Encerrar a API e continuar em outra instância com Redis saudável preserva snapshot válido, parâmetros e etapa, com limites originais. |
 | Concorrência — C-007/CT-022 | Barreira entre duas atualizações e mensagem duplicada: versão/conflito explícitos; resultado obsoleto não perde escolhas, recria sessão nem repete efeito. |
 | Expiração durante chamada — C-007/CT-022 | Provider controlado responde após expiração/perda de posse: state não é ressuscitado e não há nova tool autorizada pelo resultado tardio. |
+CT-010/CT-017 exercitam a [fronteira comum de erros](../../spec.md#execução-de-tools-e-tratamento-de-erros):
+duas tools distintas sob a mesma política, saída sanitizada no dispatcher/HTTP, falhas
+permanentes sem retry, cancelamento/deadline e tentativa transitória sem multiplicação.
+Injetar falha depois do commit e conferir reserva/evento/resultado por leitura independente;
+retomada conserva chave/hash e autorização. Banco indisponível para reconciliação mantém
+resultado incerto. Testar chave divergente e chamadas simultâneas conforme RNF-02;
+nenhuma dessas provas é satisfeita apenas por mock do handler ou pelo texto da LLM.
+
 | Falha após commit — C-007/CT-021 | Interromper entre commit da tool e atualização do state: mesma intenção/chave reconcilia resultado com uma reserva/evento; ausência da referência não autoriza retry com chave nova. |
 | Ausência/perda de Redis — CT-008/021 | State ausente solicita contexto mínimo; Redis indisponível não vira memória local permissiva; perda de controles mantém chamadas caras bloqueadas até recuperação confiável. |
 | Snapshot antigo — CT-021 | Registro com prazo vencido, permissão revogada ou formato incompatível é recusado; não renova saldo nem confirmações. |
